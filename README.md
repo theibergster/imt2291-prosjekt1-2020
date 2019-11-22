@@ -7,7 +7,7 @@ Husk å velge å beholde rettigheter fra det originale repositoriet når dere op
 Her skriver dere inn navnene til de som er deltakere på gruppen
 
 # Oppgaveteksten # 
-Oppgaveteksten ligger i [Wikien til det originale repositoriet](https://bitbucket.org/okolloen/imt2291-prosjekt1-2019/wiki/Home).
+Oppgaveteksten ligger i [Wikien til fjorårets repository](https://bitbucket.org/okolloen/imt2291-prosjekt1-2019/wiki/Home).
 
 # Rapporten #
 Rapporten til prosjektet legger dere i Wikien til deres egen fork av repositoriet.
