@@ -1,0 +1,53 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: lavender;
+}
+
+/* HEADER */
+
+header {
+  background: ivory;
+}
+
+/* NAV */
+
+nav {
+  display: flex;
+  height: 7vh;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+}
+
+nav ul li {
+  padding: .3rem;
+}
+
+.login-nav {
+  display: flex;
+  align-items: center;
+}
+
+.login-nav a {
+  text-decoration: underline;
+  padding: .1rem;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+main {
+  margin: 3rem 20%;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  box-shadow: 2px 2px 7px rgba(0, 0, 0, .2);
+}
+

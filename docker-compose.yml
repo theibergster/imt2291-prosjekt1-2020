@@ -1,0 +1,74 @@
+# more : https://robotninja.com/blog/introduction-using-selenium-docker-containers-end-end-testing/
+version: "3"
+services:
+  www:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.www
+    ports:
+      - 80:80
+    volumes:
+      - .:/var/www/html/
+      - ./logs:/var/log/apache2/
+    networks:
+      - default
+  test:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.codeception
+    volumes:
+      - ./tests:/var/www/test
+      - ./src:/var/www/html
+    networks:
+      - default
+  db:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: project_1
+      MYSQL_USER: user
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+    volumes:
+      - ./dbInit:/docker-entrypoint-initdb.d
+      # - persistent:/var/lib/mysql
+    networks:
+      - default
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+    networks:
+      - default
+  selenium-hub:
+    image: selenium/hub:3.141.59-europium
+    container_name: selenium-hub
+    networks:
+      - default
+    ports:
+      - 4444:4444
+  chrome:
+    image: selenium/node-chrome:3.141.59-europium
+    shm_size: "2gb"
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - SCREEN_WIDTH=1920
+      - SCREEN_HEIGHT=1080
+  firefox:
+    image: selenium/node-firefox:3.141.59-europium
+    shm_size: "2gb"
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - SCREEN_WIDTH=1920
+      - SCREEN_HEIGHT=1080
+volumes:
+  persistent:

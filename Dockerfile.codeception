@@ -1,0 +1,11 @@
+from php:7.3-apache
+
+RUN apt-get update && apt-get install -y apt-utils libpng-dev libjpeg-dev libpq-dev unzip git \
+  && rm -rf /var/lib/apt/lists/* \
+  && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+  && docker-php-ext-install pdo_mysql gd mbstring opcache 
+
+RUN curl -LsS https://codeception.com/codecept.phar -o /usr/local/bin/codecept
+RUN chmod a+x /usr/local/bin/codecept
+
+WORKDIR /var/www/test

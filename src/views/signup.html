@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<main>
+    <form action="signup.php" method="POST">
+        <input type="text" name="username" placeholder="Username" />
+        <input type="password" name="pwd" placeholder="Password" />
+        <input type="password" name="pwd-repeat" placeholder="Repeat Password" />
+        <button type="signup-submit">Submit</button>
+    </form>
+    <h3>Username: {{ username }}</h3>
+</main>
+
+{% endblock %}

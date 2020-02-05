@@ -1,0 +1,5 @@
+.DS_Store
+
+logs
+tests/_output
+info.txt
