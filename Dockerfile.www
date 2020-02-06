@@ -16,3 +16,5 @@ WORKDIR /var/www
 # Install twig
 RUN cd /var/www && composer require "twig/twig:^3.0"
 
+# allow .htaccess with RewriteEngine
+RUN a2enmod rewrite
