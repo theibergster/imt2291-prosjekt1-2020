@@ -1,0 +1,63 @@
+<?php
+class User {
+    private $uid = -1;
+    private $db;
+
+    public function __construct($db) {
+        $this->db = $db;
+
+        if (isset($_POST['login-submit'])) {
+            $this->login($_POST['email'], $_POST['pwd']);
+        } else if (isset($_POST['logout-submit'])) {
+            $_SESSION = array();
+            session_destroy();
+        } else if (isset($_SESSION['uid'])) {
+            $this->uid = $_SESSION['uid'];
+        }
+    }
+
+    public function loggedIn() {
+        return $this->uid > -1;
+    }
+
+    public function login($email, $pwd) {
+        $sql = 'SELECT * FROM users WHERE email=?';
+        $sth = $this->db->prepare($sql);
+        $sth->execute (array($email));
+
+        if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+            if (password_verify($pwd, $row['password'])) {
+                $_SESSION['uid'] = $row['id'];
+                $_SESSION['name'] = $row['name'];
+                $_SESSION['email'] = $row['email'];
+                $this->uid = $row['id'];
+                return array('status'=>'Login success');
+            } else {
+                return array('status'=>'Failed', 'errorMsg'=>'Wrong password');
+            }
+        } else {
+        return array('status'=>'Failed', 'errorMsg'=>'User does not exist');
+        }
+    }
+
+    public function addUser() {
+        $sql = 'INSERT INTO users (name, email, password, type) VALUES (?,?,?,?)';
+        $hashed_pwd = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
+        $sth = $this->db->prepare($sql);
+        $sth->execute([$_POST['name'], $_POST['email'], $hashed_pwd, $_POST['user-type']]);
+
+        if ($sth->rowCount() == 1) {
+            $tmp['status'] = 'User created';
+            $tmp['id'] = $this->db->lastInsertId();
+        } else {
+            $tmp['status'] = 'Failed';
+            $tmp['error'] = 'User already exists';
+        }
+
+        if ($this->db->errorInfo()[1]!=0) { // Error in SQL??????
+            $tmp['errorMessage'] = $this->db->errorInfo()[2];
+        }
+
+        return $tmp;
+    }
+}

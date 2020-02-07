@@ -4,7 +4,7 @@
 
 <main>
     <form class="signup-form" action="signup.php" method="POST">
-        <input type="text" name="Name" placeholder="Name" />
+        <input type="text" name="name" placeholder="Name" />
         <input type="email" name="email" placeholder="Email" />
         <input type="password" name="pwd" placeholder="Password" />
         <input type="password" name="pwd-repeat" placeholder="Repeat Password" />
@@ -14,8 +14,18 @@
             <option value="teacher">Teacher</option>
         </select>
 
-        <button type="signup-submit">Submit</button>
+        <button type="submit" name="signup-submit">Submit</button>
     </form>
+
+    {% if response.error %}
+        <div class="response-failed">
+            <p>{{ response.status }} - {{ response.error }}</p>
+        </div>
+    {% elseif response.id %}
+        <div class="response-success">
+            <p>{{ response.status }} - {{ response.id }}</p>
+        </div>
+    {% endif %}
 </main>
 
 {% endblock %}

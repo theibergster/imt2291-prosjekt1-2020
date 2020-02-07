@@ -4,17 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>{{ title }}</title>
 </head>
     <body>
         <header>
             <h1><a href="index.php">Hello</a></h1>
-            
+        
             {% if loggedIn %}
-            {{ include('includes/loggedIn.html') }}
+                <div class="header-login">
+                    <p>Welcome {{ userData.name }}</p>
+                    <form action="index.php" method="post">
+                        <button class="btn" type="submit" name="logout-submit">Log out</button>
+                    </form>
+                </div>
             {% else %}
-            {{ include('includes/loggedOut.html') }}
+                <div class="header-login">
+                    <p>Please log in or create a new user</p>
+                    <form action="index.php" method="post">
+                        <input type="email" name="email" placeholder="Email">
+                        <input type="password" name="pwd" placeholder="Password">
+                        <button class="btn" type="submit" name="login-submit">Log in</button>
+                    </form>
+                    <a class="btn" href="signup.php">Sign up!</a>
+                </div>
             {% endif %}
 
         </header>
