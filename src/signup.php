@@ -16,7 +16,11 @@ $user = new User($db);
 $docTitle = 'Sign up';
 
 if (isset($_POST['signup-submit'])) {
-    $response = $user->addUser();
+    if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['pwd-repeat']) || empty($_POST['pwd'])) {
+        header('Location: signup.php?error=emptyfields');
+    } else {
+        $response = $user->addUser();
+    }
 }
 
 if ($user->loggedIn()) {

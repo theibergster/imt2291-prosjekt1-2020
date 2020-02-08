@@ -7,10 +7,14 @@ class User {
         $this->db = $db;
 
         if (isset($_POST['login-submit'])) {
-            $this->login($_POST['email'], $_POST['pwd']);
+            if (!empty($_POST['email']) || !empty($_POST['pwd'])) {
+                $this->login($_POST['email'], $_POST['pwd']);
+            }
         } else if (isset($_POST['logout-submit'])) {
+            $this->uid = -1;
             $_SESSION = array();
             session_destroy();
+            header('Location: index.php');
         } else if (isset($_SESSION['uid'])) {
             $this->uid = $_SESSION['uid'];
         }
@@ -23,7 +27,7 @@ class User {
     public function login($email, $pwd) {
         $sql = 'SELECT * FROM users WHERE email=?';
         $sth = $this->db->prepare($sql);
-        $sth->execute (array($email));
+        $sth->execute(array($email));
 
         if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             if (password_verify($pwd, $row['password'])) {

@@ -1,7 +1,7 @@
 CREATE TABLE `users` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
-  `email` varchar(128) NOT NULL,
+  `email` varchar(128) NOT NULL UNIQUE,
   `password` varchar(128) NOT NULL,
   `type` enum('student','teacher','admin') NOT NULL,
   PRIMARY KEY (`id`)
