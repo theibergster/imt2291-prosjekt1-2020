@@ -44,6 +44,7 @@ class User {
         }
     }
 
+    // TODO: Add retype password check
     public function addUser() {
         $sql = 'INSERT INTO users (name, email, password, type) VALUES (?,?,?,?)';
         $hashed_pwd = password_hash($_POST['pwd'], PASSWORD_DEFAULT);

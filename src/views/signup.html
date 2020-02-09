@@ -2,8 +2,8 @@
 
 {% block content %}
 
-<main>
-    <h2>Sign up</h2>
+<main class="signup-page">
+    <h2 class="page-heading">Sign up</h2>
     <form class="signup-form" action="signup.php" method="POST">
         <input type="text" name="name" placeholder="Name" />
         <input type="email" name="email" placeholder="Email" />
@@ -15,7 +15,7 @@
             <option value="teacher">Teacher</option>
         </select>
 
-        <button class="btn" type="submit" name="signup-submit">Submit</button>
+        <button class="btn" type="submit" name="signup-submit">Sign up!</button>
     </form>
 
     {% if response.error %}
