@@ -13,24 +13,23 @@
 
             <nav>
                 <ul>
-                    <li><a href="#">Item 1</a></li>
-                    <li><a href="#">Item 2</a></li>
-                    <li><a href="#">Item 3</a></li>
+                    <li><a href="index.php">Newest</a></li>
+                    <li><a href="playlists.php">Playlists</a></li>
+                    <li><a href="#">Subscriptions</a></li>
                 </ul>
             </nav>
         
             {% if loggedIn %}
                 <div class="header-login">
-                    <p>Welcome {{ userData.name }}</p>
+                    <p>Welcome <a href="profile.php">{{ userData.name }}</a></p>
                     <form action="index.php" method="post">
                         <button class="btn" type="submit" name="logout-submit">Log out</button>
                     </form>
                 </div>
             {% else %}
                 <div class="header-login">
-                    <!-- <p>Please log in or create a new user</p> -->
                     <form action="index.php" method="post">
-                        <input type="email" name="email" placeholder="Email">
+                        <input type="email" name="email" placeholder="Email" value="{{ get['email'] }}">
                         <input type="password" name="pwd" placeholder="Password">
                         <button class="btn" type="submit" name="login-submit">Log in</button>
                     </form>

@@ -13,18 +13,17 @@ $twig = new \Twig\Environment($loader, [
 
 $db = DB::getDBConnection();
 $user = new User($db);
-$docTitle = 'Sign up';
+$docTitle = 'Create New User';
 
-if (isset($_POST['signup-submit'])) {
-    if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['pwd-repeat']) || empty($_POST['pwd'])) {
-        header('Location: signup.php?error=emptyfields');
-    } else {
-        $response = $user->addUser();
-    }
+$validate_response = $user->validateUserSignup($_POST['name'], $_POST['email'], $_POST['pwd'], $_POST['pwd-repeat']);
+if ($validate_response['status'] == 'Success') {
+    $response = $user->addUser();
+} else {
+    $response = $validate_response;
 }
 
 if ($user->loggedIn()) {
     header('Location: index.php?loggedIn=true');
 } else {
-    echo $twig->render('signup.html', ['title' => $docTitle, 'response' => $response]);
+    echo $twig->render('signupPage.html', ['title' => $docTitle, 'response' => $response, 'get' => $_GET]);
 }

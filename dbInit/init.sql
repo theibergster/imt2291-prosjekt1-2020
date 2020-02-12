@@ -3,7 +3,8 @@ CREATE TABLE `users` (
   `name` varchar(64) NOT NULL,
   `email` varchar(128) NOT NULL UNIQUE,
   `password` varchar(128) NOT NULL,
-  `type` enum('student','teacher','admin') NOT NULL,
+  `type` enum(`student`,`teacher`,`admin`) NOT NULL,
+  `verified` bit(1) NOT NULL DEFAULT `0`,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -58,5 +59,5 @@ CREATE TABLE `subscriptions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Create admin user --
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `type`) 
-VALUES (NULL, 'Admin User', 'admin@admin.no', '$2y$12$rciYrOAeONqVU7HjS6y32eRcLMJl16P/SRXJrTEm/Gu7litDRhyAa', 'admin');
+INSERT INTO `users` (`name`, `email`, `password`, `type`, `verified`) 
+VALUES (`Admin User`, `admin@admin.no`, `$2y$12$rciYrOAeONqVU7HjS6y32eRcLMJl16P/SRXJrTEm/Gu7litDRhyAa`, `admin`, `1`);

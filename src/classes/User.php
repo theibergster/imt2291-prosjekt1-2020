@@ -34,6 +34,7 @@ class User {
                 $_SESSION['uid'] = $row['id'];
                 $_SESSION['name'] = $row['name'];
                 $_SESSION['email'] = $row['email'];
+                $_SESSION['type'] = $row['type'];
                 $this->uid = $row['id'];
                 return array('status'=>'Login success');
             } else {
@@ -44,7 +45,6 @@ class User {
         }
     }
 
-    // TODO: Add retype password check
     public function addUser() {
         $sql = 'INSERT INTO users (name, email, password, type) VALUES (?,?,?,?)';
         $hashed_pwd = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
@@ -52,7 +52,7 @@ class User {
         $sth->execute([$_POST['name'], $_POST['email'], $hashed_pwd, $_POST['user-type']]);
 
         if ($sth->rowCount() == 1) {
-            $tmp['status'] = 'User created';
+            $tmp['status'] = 'Created user: ' . $_POST['email'];
             $tmp['id'] = $this->db->lastInsertId();
         } else {
             $tmp['status'] = 'Failed';
@@ -63,6 +63,24 @@ class User {
             $tmp['errorMessage'] = $this->db->errorInfo()[2];
         }
 
+        return $tmp;
+    }
+
+    public function validateUserSignup($name, $email, $pwd, $pwd_repeat) {
+        if (isset($_POST['signup-submit'])) {
+            if (empty($name) || empty($email) || empty($pwd) || empty($pwd_repeat)) {
+                $tmp['status'] = 'Failed';
+                $tmp['error'] = 'Empty fields';
+            } else {
+                if ($pwd != $pwd_repeat) {
+                    $tmp['status'] = 'Failed';
+                    $tmp['error'] = 'Passwords does not match';
+                } else {
+                    $tmp['status'] = 'Success';
+                }
+            }
+        }
+        
         return $tmp;
     }
 }
