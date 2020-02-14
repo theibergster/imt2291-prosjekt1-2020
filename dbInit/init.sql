@@ -11,12 +11,13 @@ CREATE TABLE `users` (
 CREATE TABLE `videos` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL,
+  `location` varchar(255) NOT NULL,
   `description` varchar(128),
   `subject` varchar(64),
   `rating` decimal(2,1),
   `upload_time` timestamp NOT NULL,
   `uploaded_by` bigint(20) NOT NULL,
-  `thumbnail` longblob NOT NULL,
+  `thumbnail` longblob,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`uploaded_by`) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

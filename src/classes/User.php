@@ -1,7 +1,7 @@
 <?php
 class User {
-    private $uid = -1;
-    private $db;
+    protected $uid = -1;
+    protected $db;
 
     public function __construct($db) {
         $this->db = $db;

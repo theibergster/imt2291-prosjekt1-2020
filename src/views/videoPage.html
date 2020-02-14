@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<main>
+   {% include('includes/search.html') %}
+   <h2>Video title</h2>
+   <video controls>
+    <source src="../videos/test/developerStories-en.mp4" type="video/mp4">
+    </video>
+</main>
+
+{% endblock %}
+
