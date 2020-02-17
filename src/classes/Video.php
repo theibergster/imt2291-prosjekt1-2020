@@ -17,24 +17,20 @@ class Video {
      * @param limit {string} number of rows to show.
      * @return tmp {array}
      */
-    public function getVideos($user, $limit) {
-        if ($users == 'all') {
-            $sql = 'SELECT * FROM videos ORDER BY upload_time DESC LIMIT ' . $limit;
+    public function getVideos($data) {
+        if ($data['user'] == 'all') {
+            $sql = 'SELECT * FROM videos ORDER BY upload_time DESC LIMIT ' . $data['limit'];
         } else {
-            $sql = 'SELECT * FROM videos WHERE uploaded_by=? ORDER BY upload_time DESC LIMIT ' . $limit;
+            $sql = 'SELECT * FROM videos 
+                WHERE uploaded_by = ? 
+                ORDER BY upload_time DESC LIMIT ' . $data['limit'];
         }
 
         $sth = $this->db->prepare($sql);
-        $sth->execute(array($user));
+        $sth->execute(array($data['user']));
 
-        if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-            $tmp['title'] = $row['title'];
-            $tmp['location'] = $row['location'];
-            $tmp['description'] = $row['description'];
-            $tmp['subject'] = $row['subject'];
-            $tmp['rating'] = $row['rating'];
-            $tmp['upload_time'] = $row['upload_time'];
-            $tmp['thumbnail'] = $row['thumbnail'];
+        if ($row = $sth->fetchAll(PDO::FETCH_ASSOC)) {
+            return $row;
         } else {
             $tmp['status'] = 'Failed';
             $tmp['error'] = 'No videos found';

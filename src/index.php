@@ -6,6 +6,7 @@ require_once '../../vendor/autoload.php';
 require_once 'classes/DB.php';
 require_once 'classes/User.php';
 require_once 'classes/Admin.php';
+require_once 'classes/Video.php';
 
 $loader = new \Twig\Loader\FilesystemLoader('./views');
 $twig = new \Twig\Environment($loader, [
@@ -14,13 +15,17 @@ $twig = new \Twig\Environment($loader, [
 
 $db = DB::getDBConnection();
 $user = new User($db);
+$video = new Video($db);
+
+
 
 if ($user->loggedIn()) {
     $data = [
         'title' => 'Front page | Browse',
         'loggedIn' => true,
         'userData' => $_SESSION,
-        'get' => $_GET
+        'get' => $_GET,
+        'videos' => $video->getVideos(array('user' => 'all', 'limit' => '50')),
     ];
     echo $twig->render('main/videosPage.html', $data);
 } else {

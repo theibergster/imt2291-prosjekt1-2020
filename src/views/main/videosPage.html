@@ -5,19 +5,22 @@
 <main>
     {% include('includes/search.html') %}
 
-    <h2>Videos</h2>
+    <h2>Most Recent Videos</h2>
 
     <div class="video-grid">
 
-        <div class="video-card">
-            <h3>Video title</h3>
-            <p>subject</p>
-            <video controls>
-                <source src="videos/developerStories-en.mp4" type="video/mp4">
-            </video>
-            <small>uploaded_by - upload_time</small>
-            <p class="rating">rating UwU</p>
-        </div> 
+        {% for video in videos %}
+            <div class="video-card">
+                <h3>{{ video.title }}</h3>
+                <p>{{ video.subject }}</p>
+                <video controls>
+                    <source src="videos/developerStories-en.mp4" type="video/mp4">
+                </video>
+                <small>Uploaded by: {{ video.upladed_by }}</small>
+                <small>{{ video.upload_time }}</small>
+                <p class="rating">Rating: {{ video.rating }}</p>
+            </div> 
+        {% endfor %}
 
     </div>
 
