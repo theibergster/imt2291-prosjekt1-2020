@@ -13,11 +13,16 @@ $twig = new \Twig\Environment($loader, [
 
 $db = DB::getDBConnection();
 $user = new User($db);
-$docTitle = 'Profile Page';
 
 
 if ($user->loggedIn()) {
-    echo $twig->render('profilePage.html', ['title' => $docTitle, 'loggedIn' => true, 'userData' => $_SESSION]);
+    $data = [
+        'title' => 'Profile Page',
+        'loggedIn' => true,
+        'userData' => $_SESSION
+    ];
+
+    echo $twig->render('profile/profilePage.html', $data);
 } else {
     header('Location: index.php?loggedIn=false');
 }

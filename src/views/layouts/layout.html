@@ -9,17 +9,20 @@
 </head>
     <body>
         <header>
-            <h1><a href="index.php">Hello</a></h1>
+            <h1><a href="index.php">Name</a></h1>
 
-            <nav>
-                <ul>
-                    <li><a href="index.php">Newest</a></li>
-                    <li><a href="playlists.php">Playlists</a></li>
-                    <li><a href="#">Subscriptions</a></li>
-                </ul>
-            </nav>
-        
+            
             {% if loggedIn %}
+                <nav>
+                    <ul>
+                        <li><a href="index.php">Videos</a></li>
+                        <li><a href="playlists.php">Playlists</a></li>
+                        <li><a href="#">Users</a></li>
+                        <li><a href="#">My Subscriptions</a></li>
+                        <li><a href="uploadvideo.php">Upload</a></li>
+                    </ul>
+                </nav>
+        
                 <div class="header-login">
                     <p>Welcome <a href="profile.php">{{ userData.name }}</a></p>
                     <form action="index.php" method="post">
@@ -27,13 +30,13 @@
                     </form>
                 </div>
             {% else %}
+                <p>Please log in or create a new user</p>
                 <div class="header-login">
                     <form action="index.php" method="post">
                         <input type="email" name="email" placeholder="Email" value="{{ get['email'] }}">
                         <input type="password" name="pwd" placeholder="Password">
                         <button class="btn" type="submit" name="login-submit">Log in</button>
                     </form>
-                    <a href="signup.php">Sign up!</a>
                 </div>
             {% endif %}
 

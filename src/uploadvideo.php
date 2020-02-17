@@ -14,7 +14,6 @@ $twig = new \Twig\Environment($loader, [
 
 $db = DB::getDBConnection();
 $user = new User($db);
-$docTitle = 'Videos';
 
 $video = new Video($db);
 if (isset($_POST['file-submit'])) {
@@ -22,7 +21,14 @@ if (isset($_POST['file-submit'])) {
 }
 
 if ($user->loggedIn()) {
-    echo $twig->render('includes/uploadVideos.html', ['title' => $docTitle, 'loggedIn' => true, 'response' => $response, 'userData' => $_SESSION]);
+    $data = [
+        'title' => 'Videos',
+        'loggedIn' => true,
+        'response' => $response,
+        'userData' => $_SESSION
+    ];
+    
+    echo $twig->render('main/uploadVideo.html', $data);
 } else {
     header('Location: signup.php?loggedIn=false');
 }

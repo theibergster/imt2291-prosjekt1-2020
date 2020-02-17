@@ -65,17 +65,21 @@ class Video {
 
             // if (is_uploaded_file($_FILES['file-upload']['name'])) {
                 if (move_uploaded_file($_FILES['file-upload']['tmp_name'], $target_file)) {
-                    // Insert record in db
                     $sql = 'INSERT INTO videos (title, location, description, subject, uploaded_by, thumbnail)
                         VALUES (:title, :location, :description, :subject, :uploaded_by, :thumbnail)';
 
-                    $sth = $this->db->prepare($sql);
-                    $sth->bindParam(':title', $_POST['title']);
+                    $query['title'] = htmlspecialchars($_POST['title']);
+                    $query['description'] = htmlspecialchars($_POST['description']);
+                    $query['subject'] = htmlspecialchars($_POST['subject']);
+                    $query['thumbnail'] = htmlspecialchars($_POST['thumbnail']);
+
+                    $sth = $this->db->prepare($sqtitlel);
+                    $sth->bindParam(':title', $query['title']);
                     $sth->bindParam(':location', $target_file);
-                    $sth->bindParam(':description', $_POST['description']);
-                    $sth->bindParam(':subject', $_POST['subject']);
+                    $sth->bindParam(':description', $query['description']);
+                    $sth->bindParam(':subject', $query['subject']);
                     $sth->bindParam(':uploaded_by', $_SESSION['uid']);
-                    $sth->bindParam(':thumbnail', $_POST['thumbnail']);
+                    $sth->bindParam(':thumbnail', $query['thumbnail']);
                     $sth->execute();
                     
                     if ($sth->rowCount() == 1) {
@@ -105,4 +109,33 @@ class Video {
         }
     }
 
+    public function videoSearch($data) {
+        if (isset($_POST['search-submit'])) {
+        // Checks if the search field is not empty
+            if (!empty($_POST['search-query'])) {
+                header('Location: ../index.php?search='.$_POST['search-query']);
+
+                $query = htmlspecialchars("%{$_POST['search-query']}%");
+
+                $sql = 'SELECT videos.*, users.email, users.name
+                    FROM users 
+                    INNER JOIN videos 
+                    ON users.id = videos.id 
+                    WHERE (video.title LIKE ?) 
+                    OR (video.description LIKE ?)
+                    OR (users.name LIKE ?)
+                    ORDER BY videos.upload_time DESC';
+                
+                $sth = $this->db->prepare($sql);
+                $sth->execute(array($query, $query, $query));
+
+                if ($sth->rowCount >= 1) {
+                    return $sth->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    return array('status' => 'No results');
+                }                
+                
+            } 
+        }
+    }
 }

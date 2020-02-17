@@ -8,7 +8,7 @@ class User {
 
         if (isset($_POST['login-submit'])) {
             if (!empty($_POST['email']) || !empty($_POST['pwd'])) {
-                $this->login($_POST['email'], $_POST['pwd']);
+                $this->login();
             }
         } else if (isset($_POST['logout-submit'])) {
             $this->uid = -1;
@@ -24,13 +24,17 @@ class User {
         return $this->uid > -1;
     }
 
-    public function login($email, $pwd) {
+    public function login() {
+        $email = htmlspecialchars($_POST['email']);
+        $pwd = htmlspecialchars($_POST['pwd']);
+
         $sql = 'SELECT * FROM users WHERE email=?';
         $sth = $this->db->prepare($sql);
         $sth->execute(array($email));
 
         if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             if (password_verify($pwd, $row['password'])) {
+                session_start();
                 $_SESSION['uid'] = $row['id'];
                 $_SESSION['name'] = $row['name'];
                 $_SESSION['email'] = $row['email'];

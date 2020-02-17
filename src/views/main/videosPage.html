@@ -1,0 +1,28 @@
+{% extends 'layouts/layout.html' %}
+
+{% block content %}
+
+<main>
+    {% include('includes/search.html') %}
+
+    <h2>Videos</h2>
+
+    <div class="video-grid">
+
+        <div class="video-card">
+            <h3>Video title</h3>
+            <p>subject</p>
+            <video controls>
+                <source src="videos/developerStories-en.mp4" type="video/mp4">
+            </video>
+            <small>uploaded_by - upload_time</small>
+            <p class="rating">rating UwU</p>
+        </div> 
+
+    </div>
+
+
+
+</main>
+
+{% endblock %}

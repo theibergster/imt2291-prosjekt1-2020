@@ -13,11 +13,17 @@ $twig = new \Twig\Environment($loader, [
 
 $db = DB::getDBConnection();
 $user = new User($db);
-$docTitle = 'My Playlists';
 
 
 if ($user->loggedIn()) {
-    echo $twig->render('playlistPage.html', ['title' => $docTitle, 'loggedIn' => true, 'userData' => $_SESSION, 'get' => $_GET]);
+    $data = [
+        'title' => 'My Playlists',
+        'loggedIn' => true,
+        'userData' => $_SESSION,
+        'get' => $_GET
+    ];
+
+    echo $twig->render('main/playlistsPage.html', $data);
 } else {
     header('Location: index.php?loggedIn=false');
 }

@@ -13,7 +13,6 @@ $twig = new \Twig\Environment($loader, [
 
 $db = DB::getDBConnection();
 $user = new User($db);
-$docTitle = 'Create New User';
 
 $validate_response = $user->validateUserSignup($_POST['name'], $_POST['email'], $_POST['pwd'], $_POST['pwd-repeat']);
 if ($validate_response['status'] == 'Success') {
@@ -25,5 +24,11 @@ if ($validate_response['status'] == 'Success') {
 if ($user->loggedIn()) {
     header('Location: index.php?loggedIn=true');
 } else {
-    echo $twig->render('signupPage.html', ['title' => $docTitle, 'response' => $response, 'get' => $_GET]);
+    $data = [
+        'title' => 'Create New User',
+        'response' => $response,
+        'get' => $_GET
+    ];
+    
+    echo $twig->render('main/signupPage.html', $data);
 }

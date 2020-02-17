@@ -13,12 +13,16 @@ $twig = new \Twig\Environment($loader, [
 ]);
 
 $db = DB::getDBConnection();
-$user = new Admin($db);
-$docTitle = 'Front page | Browse';
-
+$user = new User($db);
 
 if ($user->loggedIn()) {
-    echo $twig->render('mainPage.html', ['title' => $docTitle, 'loggedIn' => true, 'userData' => $_SESSION]);
+    $data = [
+        'title' => 'Front page | Browse',
+        'loggedIn' => true,
+        'userData' => $_SESSION,
+        'get' => $_GET
+    ];
+    echo $twig->render('main/videosPage.html', $data);
 } else {
     header('Location: signup.php?loggedIn=false');
 }
