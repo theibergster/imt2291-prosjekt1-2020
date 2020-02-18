@@ -14,7 +14,7 @@ CREATE TABLE `videos` (
   `location` varchar(255) NOT NULL,
   `description` varchar(128),
   `subject` varchar(64),
-  `rating` decimal(2,1),
+  `rating` decimal(2,1) NOT NULL DEFAULT `0.0`,
   `upload_time` timestamp NOT NULL,
   `uploaded_by` bigint(20) NOT NULL,
   `thumbnail` longblob,

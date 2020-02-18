@@ -10,20 +10,18 @@
     <div class="video-grid">
 
         {% for video in videos %}
-            <div class="video-card">
-                <h3>{{ video.title }}</h3>
-                <p>{{ video.subject }}</p>
-                <video controls>
-                    <source src="videos/developerStories-en.mp4" type="video/mp4">
-                </video>
-                <small>Uploaded by: {{ video.upladed_by }}</small>
-                <small>{{ video.upload_time }}</small>
-                <p class="rating">Rating: {{ video.rating }}</p>
-            </div> 
+            
+                <div class="video-card">
+                    <a href="video.php?id={{ video.id }}"><h3>{{ video.title }}</h3></a>
+                    <p>{{ video.subject }}</p>
+                    <a href="video.php?id={{ video.id }}"><img class="thumbnail" src="{{ video.location }}" alt="{{ video.title }}"></a>
+                    <small>Uploaded by: {{ video.name }}</small>
+                    <small>{{ video.upload_time }}</small>
+                    <p class="rating">Rating: {{ video.rating }}</p>
+                </div> 
         {% endfor %}
 
     </div>
-
 
 
 </main>

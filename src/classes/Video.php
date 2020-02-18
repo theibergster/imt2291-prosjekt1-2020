@@ -1,10 +1,10 @@
 <?php
 /**
- * Add, edit, delete videos.
+ * Display, Add, edit, delete videos.
  */
 class Video {
     private $db;
-    private $valid_extentions = array('mp4','avi','3gp','mov','mpeg', 'webm', 'jpg');
+    private $valid_extentions = array('mp4','avi','3gp','mov','mpeg', 'webm');
 
 
     public function __construct($db) {
@@ -12,18 +12,24 @@ class Video {
     }
 
     /**
-     * get all vidoes from all users or a single user.
-     * @param user {string} 
-     * @param limit {string} number of rows to show.
-     * @return tmp {array}
+     * Returns the videos of all users or a single user.
+     * @param data {array} assoc array with either single 
+     * or all users, and the limit of how many rows to show.
+     * @return {array} Returns an assoc array of either rows return from db
+     * or error msg.
      */
     public function getVideos($data) {
         if ($data['user'] == 'all') {
-            $sql = 'SELECT * FROM videos ORDER BY upload_time DESC LIMIT ' . $data['limit'];
+            $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid
+                FROM videos
+                LEFT JOIN users ON videos.uploaded_by = users.id
+                ORDER BY videos.upload_time DESC LIMIT ' . $data['limit'];
         } else {
-            $sql = 'SELECT * FROM videos 
-                WHERE uploaded_by = ? 
-                ORDER BY upload_time DESC LIMIT ' . $data['limit'];
+            $sql = 'SELECT videos.*, users.name, users.email
+                FROM users
+                RIGHT JOIN videos ON users.id = videos.uploaded_by
+                WHERE users.id = ?
+                ORDER BY videos.upload_time DESC LIMIT ' . $data['limit'];
         }
 
         $sth = $this->db->prepare($sql);
@@ -32,7 +38,7 @@ class Video {
         if ($row = $sth->fetchAll(PDO::FETCH_ASSOC)) {
             return $row;
         } else {
-            $tmp['status'] = 'Failed';
+            $tmp['status'] = 'Error';
             $tmp['error'] = 'No videos found';
         }
         return $tmp;
@@ -48,45 +54,43 @@ class Video {
         $mime = $_FILES['file-upload']['type'];
         $size = $_FILES['file-upload']['size'];
 
-        $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/videos/';
+        $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/src/uploads/';
         $target_file = $target_dir . $name;
-
-        // For testing
-        // return array('asd' => $_FILES['file-upload']['tmp_name']);
-        // return array('asd' => getcwd());
+        $location = 'src/uploads/' . $name;
 
         // Check extension
         $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
         if (in_array($file_type, $this->valid_extentions)) {
 
-            // if (is_uploaded_file($_FILES['file-upload']['name'])) {
+            if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
+
                 if (move_uploaded_file($_FILES['file-upload']['tmp_name'], $target_file)) {
                     $sql = 'INSERT INTO videos (title, location, description, subject, uploaded_by, thumbnail)
                         VALUES (:title, :location, :description, :subject, :uploaded_by, :thumbnail)';
 
-                    $query['title'] = htmlspecialchars($_POST['title']);
-                    $query['description'] = htmlspecialchars($_POST['description']);
-                    $query['subject'] = htmlspecialchars($_POST['subject']);
-                    $query['thumbnail'] = htmlspecialchars($_POST['thumbnail']);
+                    $title = htmlspecialchars($_POST['title']);
+                    $description = htmlspecialchars($_POST['description']);
+                    $subject = htmlspecialchars($_POST['subject']);
+                    $thumnail = htmlspecialchars($_POST['thumbnail']);
 
-                    $sth = $this->db->prepare($sqtitlel);
-                    $sth->bindParam(':title', $query['title']);
-                    $sth->bindParam(':location', $target_file);
-                    $sth->bindParam(':description', $query['description']);
-                    $sth->bindParam(':subject', $query['subject']);
+                    $sth = $this->db->prepare($sql);
+                    $sth->bindParam(':title', $title);
+                    $sth->bindParam(':location', $location); //TODO: change when adding folders for each user
+                    $sth->bindParam(':description', $description);
+                    $sth->bindParam(':subject', $subject);
                     $sth->bindParam(':uploaded_by', $_SESSION['uid']);
-                    $sth->bindParam(':thumbnail', $query['thumbnail']);
+                    $sth->bindParam(':thumbnail', $thumnail);
                     $sth->execute();
                     
                     if ($sth->rowCount() == 1) {
-                        $tmp['status'] = 'Smud';
-                        $tmp['id'] = $this->db->lastInsertId();
+                        $tmp['status'] = 'Success';
+                        $tmp['id'] = $this->db->lastInsertId(); // remove later i guess
                     } else {
-                        $tmp['status'] = 'Usmud';
+                        $tmp['status'] = 'Error';
                         $tmp['error'] = 'Video was not added to db';
                     }
 
-                    if ($this->db->errorInfo()[1]!=0) { // Error in SQL??????
+                    if ($this->db->errorInfo()[1]!=0) {
                         $tmp['errorMessage'] = $this->db->errorInfo()[2];
                     }
 
@@ -95,14 +99,38 @@ class Video {
                 } else {
                     return array('error' => 'not moved');
                 }
-
-            // } else {
-            //     return array('error' => 'not uploaded');
-            // }
+            } else {
+                
+                return array('error' => 'not uploaded');
+            }
             
         } else {
             return array('error' => 'Invalid file extension');
         }
+    }
+
+    public function addThumbnail($e) {
+        // $image = imagecreatetruecolor(200, 300);
+        // imagefill($image);
+
+        if (!empty($_POST['thumbnail'])) {
+            // Add thumbnail to db.
+        } else {
+            // Make thumbnail from video and add to db.
+            
+        }
+
+        $sec = 5;
+        $movie = $e;
+        $thumbnail = 'thumbnail.png';
+
+        $ffmpeg = FFMpeg\FFMpeg::create();
+        $video = $ffmpeg->open($movie);
+        $frame = $video->frame(FFMpeg\Coordinate\TimeCode::fromSeconds($sec));
+        $frame->save($thumbnail);
+
+        $tmp['thumbnail'] = $thumbnail;
+        // echo '<img src="'.$thumbnail.'">';
     }
 
     public function videoSearch($data) {
@@ -115,8 +143,7 @@ class Video {
 
                 $sql = 'SELECT videos.*, users.email, users.name
                     FROM users 
-                    INNER JOIN videos 
-                    ON users.id = videos.id 
+                    INNER JOIN videos ON users.id = videos.id 
                     WHERE (video.title LIKE ?) 
                     OR (video.description LIKE ?)
                     OR (users.name LIKE ?)

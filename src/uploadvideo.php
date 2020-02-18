@@ -14,8 +14,8 @@ $twig = new \Twig\Environment($loader, [
 
 $db = DB::getDBConnection();
 $user = new User($db);
-
 $video = new Video($db);
+
 if (isset($_POST['file-submit'])) {
     $response = $video->uploadVideo();
 }

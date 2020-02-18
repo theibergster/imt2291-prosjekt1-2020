@@ -3,4 +3,4 @@
 logs
 tests/_output
 notes.txt
-videos/test
+src/uploads/*
