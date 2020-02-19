@@ -7,10 +7,10 @@
 
     <h2>Most Recent Videos</h2>
 
-    <div class="video-grid">
+    {% if videos %}
+        <div class="video-grid">
 
-        {% for video in videos %}
-            
+            {% for video in videos %}
                 <div class="video-card">
                     <a href="video.php?id={{ video.id }}"><h3>{{ video.title }}</h3></a>
                     <p>{{ video.subject }}</p>
@@ -19,10 +19,13 @@
                     <small>{{ video.upload_time }}</small>
                     <p class="rating">Rating: {{ video.rating }}</p>
                 </div> 
-        {% endfor %}
+            {% endfor %}
 
-    </div>
+        </div>
 
+    {% else %}
+        <p>No available videos</p>
+    {% endif %}
 
 </main>
 

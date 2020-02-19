@@ -59,6 +59,17 @@ CREATE TABLE `subscriptions` (
   FOREIGN KEY (`user_id`) REFERENCES users (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `rating` (
+  `video_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `rating` enum(`1`,`2`,`3`,`4`,`5`),
+  `liked` bit(1) NOT NULL DEFAULT `0`,
+  PRIMARY KEY (`video_id`,`user_id`),
+  FOREIGN KEY (`video_id`) REFERENCES videos (id),
+  FOREIGN KEY (`user_id`) REFERENCES users (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 -- Create admin user --
 INSERT INTO `users` (`name`, `email`, `password`, `type`, `verified`) 
 VALUES (`Admin User`, `admin@admin.no`, `$2y$12$rciYrOAeONqVU7HjS6y32eRcLMJl16P/SRXJrTEm/Gu7litDRhyAa`, `admin`, `1`);

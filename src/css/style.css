@@ -6,7 +6,7 @@
 }
 
 body {
-  background: white;
+  background: #8cd3f1;
 }
 
 h1, h2 {
@@ -25,7 +25,8 @@ a:hover {
 /* Form inputs */ 
 
 input,
-select {
+select,
+textarea {
   border: none;
   border-radius: 3px;
   padding: .5rem .4rem;
@@ -66,7 +67,7 @@ video {
 /*** Header ***/
 
 header {
-  background: lightskyblue;
+  background: #8cd3f1;
   padding: .5rem 1rem;
   display: grid;
   grid-template-columns: 1fr 2fr 2fr;
@@ -106,13 +107,23 @@ nav ul li {
   width: 100%;
 }
 
-main {
+/* main {
   background: lightskyblue;
   margin: 3rem 10%;
   padding: 1rem 2rem;
   width: 100%;
   border-radius: 3px;
   box-shadow: 2px 2px 7px rgba(0, 0, 0, .1);
+} */
+
+main {
+  margin: 3rem 10%;
+  padding: 1rem 2rem;
+  width: 100%;
+  border-radius: 11px;
+  background: #8cd3f1;
+  box-shadow: 27px 27px 83px #7ebed9, 
+              -27px -27px 83px #9ae8ff;
 }
 
 /*** Index page ***/
