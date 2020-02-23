@@ -23,6 +23,11 @@ if (isset($_POST['rate-submit'])) {
     $rate->rateVideo($_GET['id']);
 }
 
+// Video comments
+if (isset($_POST['comment-submit'])) {
+    $response = $video->addComment($_GET['id']); 
+}
+
 // Render
 if ($user->loggedIn()) {
     $data = [
@@ -36,6 +41,7 @@ if ($user->loggedIn()) {
             // 'total' => $rating->getTotalRating($_GET['id']),
             // 'user' => $rating->getUserRating($_GET['id']),
         ],
+        'comments' => $video->getComments($_GET['id']),
     ];
     
     echo $twig->render('video.html', $data);

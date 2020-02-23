@@ -7,10 +7,10 @@
         <h2>{{ video.title }}</h2>
         {% include('includes/search.html') %}
     </div>
-    
+
     <div class="video-header">
-        <small>Uploaded by: {{video.name }}</small>
-        <small>{{video.upload_time}}</small>
+        <small>Uploaded by: {{ video.name }}</small>
+        <small>{{ video.upload_time }}</small>
     </div>
     
     <video width="600" controls>
@@ -38,6 +38,45 @@
     <div class="description">
         <h3>Description</h3>
         <p>{{ video.description }}</p>
+    </div>
+    <!-- Comment section || Add comment-->
+    <form class="add-comment" action="video.php?id={{ get.id }}" method="post">
+        <label for="comment">Add Comment</label>
+        <textarea name="comment" id="comment" cols="30" rows="10" placeholder="Add a comment.."></textarea>
+        <button class="btn" type="submit" name="comment-submit">Comment</button>
+    </form>
+
+    {% if response.error or response.errorMessage %}
+        <div class="response-failed">
+            <p>{{ response.status }} - {{ response.error }}{{ response.errorMessage }}</p>
+        </div>
+    {% elseif response.id %}
+        <div class="response-success">
+            <p>{{ response.status }} {{ response.id }}</p>
+        </div>
+    {% endif %}
+
+    <!-- Comment list TODO: Add check if comments -->
+    
+    <div class="comments-list">
+        {% if comments.error != 'Error' %}
+
+            {% for comment in comments %}
+                <div class="comment">
+                    <div class="comment-header">
+                        <small>{{ comment.uname }}</small>
+                        <small>@ {{ comment.time }}</small>
+                    </div>
+                    <div class="comment-body">
+                        <p>{{ comment.comment }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+            
+        {% else %}
+            <p>No comments to show..</p>
+        {% endif %}
+        
     </div>
 </main>
 

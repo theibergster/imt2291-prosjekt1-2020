@@ -184,6 +184,52 @@ class Video {
         // echo '<img src="'.$thumbnail.'">';
     }
 
+    public function getComments($vid) {
+        $id = htmlspecialchars($vid);
+
+        $sql = 'SELECT comments.*, users.name AS uname
+            From comments
+            LEFT JOIN users ON comments.user_id = users.id
+            WHERE video_id = ?
+            ORDER BY comments.time DESC';
+
+        $sth = $this->db->prepare($sql);
+        $sth->execute(array($id));
+
+        if ($row = $sth->fetchAll(PDO::FETCH_ASSOC)) {
+            return $row;
+        } else {
+            return array('error' => 'Error');
+        }
+    }
+
+    public function addComment($vid) {
+        if (!empty($_POST['comment'])) {
+            $id = htmlspecialchars($vid);
+
+            $sql = 'INSERT INTO comments (user_id, video_id, comment)
+                VALUES (:uid, :vid, :comment)';
+
+            $sth = $this->db->prepare($sql);
+            $sth->bindParam(':uid', $_SESSION['uid']);
+            $sth->bindParam(':vid', $id);
+            $sth->bindParam(':comment', $_POST['comment']);
+            $sth->execute();
+
+            if ($sth->rowCount() == 1) {
+                $tmp['status'] = 'Success';
+                $tmp['id'] = $this->db->lastInsertId();
+            } else {
+                $tmp['status'] = 'Error';
+                $tmp['error'] = 'Could not add comment';
+            }
+        } else {
+            $tmp['error'] = 'Emtpy field';
+        }
+
+        return $tmp;
+    }
+
     // TODO: Its own search class ?
     public function videoSearch($data) {
         if (isset($_POST['search-submit'])) {
