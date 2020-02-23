@@ -4,28 +4,32 @@
 
 <main>
    {% include('includes/search.html') %}
-   <h2>Videos Test</h2>
+   <h2>Upload</h2>
    <p>{{ response.asd }}</p>
    <p>{{ response.type }}</p>
    <form action="uploadvideo.php" method="post" enctype="multipart/form-data">
-        <label for="file">Add video</label>
-        <input type="file" name="file-upload" id="file">
+        <label for="file-video">Select video</label>
+        <input type="file" name="file-video" id="file-video">
+
+        <label for="file-thumbnail">Optional: Add thumbnail</label>
+        <input type="file" name="file-thumbnail" id="file-thumbnail">
 
         <input type="text" name="title" placeholder="Title">
         <input type="text" name="subject" placeholder="Subject">
-        <input type="text" name="thumbnail" placeholder="Thumbnail">
         <textarea name="description" cols="30" rows="10"></textarea>
 
-        <button type="submit" name="file-submit">Add video</button>
+        <button class="btn" type="submit" name="file-submit">Add video</button>
     </form>
     
     {% if response.error or response.errorMessage %}
         <div class="response-failed">
             <p>{{ response.status }} - {{ response.error }}{{ response.errorMessage }}</p>
+            <p>{{ response.thumbnail.status }}</p>
         </div>
     {% elseif response.id %}
         <div class="response-success">
             <p>{{ response.status }} - {{ response.id }}</p>
+            <p>{{ response.thumbnail.status }}</p>
         </div>
     {% endif %}
 </main>

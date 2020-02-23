@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
 /*** Globals ***/
 
 * {
@@ -6,11 +8,13 @@
 }
 
 body {
-  background: #8cd3f1;
+  background: #666;
+  color: #333;
 }
 
-h1, h2 {
+h1, h2, h3 {
   letter-spacing: .1rem;
+  font-family: 'Open Sans';
 }
 
 a {
@@ -19,7 +23,7 @@ a {
 }
 
 a:hover {
-  color: white;
+  text-decoration: underline;
 }
 
 /* Form inputs */ 
@@ -67,11 +71,18 @@ video {
 /*** Header ***/
 
 header {
-  background: #8cd3f1;
+  background: white;
   padding: .5rem 1rem;
+  height: 5rem;
   display: grid;
   grid-template-columns: 1fr 2fr 2fr;
   align-items: center;
+}
+
+header input,
+header input::placeholder {
+  background: #666;
+  color: white;
 }
 
 .header-login {
@@ -120,10 +131,11 @@ main {
   margin: 3rem 10%;
   padding: 1rem 2rem;
   width: 100%;
-  border-radius: 11px;
-  background: #8cd3f1;
-  box-shadow: 27px 27px 83px #7ebed9, 
-              -27px -27px 83px #9ae8ff;
+  border-radius: 10px;
+  border-radius: 10px;
+  background: #666;
+  box-shadow:  -10px 10px 29px #595959, 
+              10px -10px 29px #737373;
 }
 
 /*** Index page ***/
@@ -149,6 +161,10 @@ main {
   height: 300px;
   border-radius: 3px;
   box-shadow: 2px 2px 7px rgba(0, 0, 0, .1);
+}
+
+.thumbnail {
+  max-width: 300px;
 }
 
 

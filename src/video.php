@@ -18,21 +18,7 @@ $user = new User($db);
 $video = new Video($db);
 $rate = new Rate($db);
 
-// which class tho..
-$sql = 'SELECT videos.*, users.name
-        FROM videos
-        LEFT JOIN users ON videos.uploaded_by = users.id
-        WHERE videos.id = ?';
-
-$id = htmlspecialchars($_GET['id']);
-
-$sth = $db->prepare($sql);
-$sth->execute(array($id));
-
-$row = $sth->fetch(PDO::FETCH_ASSOC);
-
-// rate
-
+// Rate TODO:
 if (isset($_POST['rate-submit'])) {
     $rate->rateVideo($_GET['id']);
 }
@@ -44,10 +30,11 @@ if ($user->loggedIn()) {
         'loggedIn' => true,
         'response' => $response,
         'userData' => $_SESSION,
-        'video' => $row,
+        'get' => $_GET,
+        'video' => $video->getVideoInfo($_GET['id']), // video_info ?
         'rate' => [
-            'total' => $rating->getTotalRating($_GET['id']),
-            'user' => $rating->getUserRating($_GET['id']),
+            // 'total' => $rating->getTotalRating($_GET['id']),
+            // 'user' => $rating->getUserRating($_GET['id']),
         ],
     ];
     

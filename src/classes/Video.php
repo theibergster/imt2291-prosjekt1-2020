@@ -4,7 +4,7 @@
  */
 class Video {
     private $db;
-    private $valid_extentions = array('mp4','avi','3gp','mov','mpeg', 'webm');
+    private $valid_extensions = array('mp4','avi','3gp','mov','mpeg', 'webm');
 
 
     public function __construct($db) {
@@ -49,42 +49,40 @@ class Video {
      * @return tmp {array} status or error msg
      */
     public function uploadVideo() {
-        // TODO: ADD mime and size to video table
-        $name = $_FILES['file-upload']['name'];
-        $mime = $_FILES['file-upload']['type'];
-        $size = $_FILES['file-upload']['size'];
+        $name = $_FILES['file-video']['name'];
+        $mime = $_FILES['file-video']['type'];
 
         $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/src/uploads/';
-        $target_file = $target_dir . $name;
-        $location = 'src/uploads/' . $name;
+        $target_file = $target_dir . $name; // upload location
+        $location = 'src/uploads/' . $name; // name of location in db
 
         // Check extension
         $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        if (in_array($file_type, $this->valid_extentions)) {
+        if (in_array($file_type, $this->valid_extensions)) {
 
-            if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
+            if (is_uploaded_file($_FILES['file-video']['tmp_name'])) {
 
-                if (move_uploaded_file($_FILES['file-upload']['tmp_name'], $target_file)) {
-                    $sql = 'INSERT INTO videos (title, location, description, subject, uploaded_by, thumbnail)
-                        VALUES (:title, :location, :description, :subject, :uploaded_by, :thumbnail)';
+                if (move_uploaded_file($_FILES['file-video']['tmp_name'], $target_file)) {
+                    $sql = 'INSERT INTO videos (title, location, mime, description, subject, uploaded_by)
+                        VALUES (:title, :location, :mime, :description, :subject, :uploaded_by)';
 
                     $title = htmlspecialchars($_POST['title']);
                     $description = htmlspecialchars($_POST['description']);
                     $subject = htmlspecialchars($_POST['subject']);
-                    $thumnail = htmlspecialchars($_POST['thumbnail']);
 
                     $sth = $this->db->prepare($sql);
                     $sth->bindParam(':title', $title);
                     $sth->bindParam(':location', $location); //TODO: change when adding folders for each user
+                    $sth->bindParam(':mime', $mime);
                     $sth->bindParam(':description', $description);
                     $sth->bindParam(':subject', $subject);
                     $sth->bindParam(':uploaded_by', $_SESSION['uid']);
-                    $sth->bindParam(':thumbnail', $thumnail);
                     $sth->execute();
                     
                     if ($sth->rowCount() == 1) {
                         $tmp['status'] = 'Success';
-                        $tmp['id'] = $this->db->lastInsertId(); // remove later i guess
+                        $tmp['id'] = $this->db->lastInsertId();
+                        $tmp['thumbnail'] = $this->addThumbnail($tmp['id']);
                     } else {
                         $tmp['status'] = 'Error';
                         $tmp['error'] = 'Video was not added to db';
@@ -109,30 +107,80 @@ class Video {
         }
     }
 
-    public function addThumbnail($e) {
+    public function addThumbnail($id) {
+        $ext_check = array('jpg', 'jpeg', 'png', 'gif'); // Array of accepted file types
+        $name = $_FILES['file-thumbnail']['name'];
+
+        $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/src/uploads/'; // Upload location on server
+        $target_file = $target_dir . $name; // name of file
+        $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION)); // file type
+        $location = 'src/uploads/' . $id . '.' . $file_type; // location string stored in db
+
+        // Extension check
+        if (in_array($file_type, $ext_check)) {
+            // Upload check
+            if (is_uploaded_file($_FILES['file-thumbnail']['tmp_name'])) {
+                if (move_uploaded_file($_FILES['file-thumbnail']['tmp_name'], $target_dir . $id . '.' . $file_type)) { 
+                    $sql = 'UPDATE videos
+                        SET thumbnail = :thumbnail
+                        WHERE id  = :id';
+
+                    $sth = $this->db->prepare($sql);
+                    $sth->bindParam(':thumbnail', $location);
+                    $sth->bindParam(':id', $id);
+                    $sth->execute();
+
+                    if ($sth->rowCount() == 1) {
+                        return 'success';
+                    } else {
+                        return 'error';
+                    }
+                }
+            }
+        }
+
+
         // $image = imagecreatetruecolor(200, 300);
         // imagefill($image);
 
-        if (!empty($_POST['thumbnail'])) {
+        // if (!empty($_POST['thumbnail'])) {
             // Add thumbnail to db.
-        } else {
+        // } else {
             // Make thumbnail from video and add to db.
             
-        }
+        // }
 
-        $sec = 5;
-        $movie = $e;
-        $thumbnail = 'thumbnail.png';
+        // $sec = 5;
+        // $movie = $e;
+        // $thumbnail = 'thumbnail.png';
 
-        $ffmpeg = FFMpeg\FFMpeg::create();
-        $video = $ffmpeg->open($movie);
-        $frame = $video->frame(FFMpeg\Coordinate\TimeCode::fromSeconds($sec));
-        $frame->save($thumbnail);
+        // $ffmpeg = FFMpeg\FFMpeg::create();
+        // $video = $ffmpeg->open($movie);
+        // $frame = $video->frame(FFMpeg\Coordinate\TimeCode::fromSeconds($sec));
+        // $frame->save($thumbnail);
 
-        $tmp['thumbnail'] = $thumbnail;
+        // $tmp['thumbnail'] = $thumbnail;
         // echo '<img src="'.$thumbnail.'">';
     }
 
+    public function getVideoInfo($video) {
+        $id = htmlspecialchars($video);
+
+        $sql = 'SELECT videos.*, users.name
+            FROM videos
+            LEFT JOIN users ON videos.uploaded_by = users.id
+            WHERE videos.id = ?';
+
+        $sth = $this->db->prepare($sql);
+        $sth->execute(array($id));
+
+        if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+            return $row;
+        } else {
+            // Something bad TODO:
+        }
+    }
+    // TODO: Its own search class ?
     public function videoSearch($data) {
         if (isset($_POST['search-submit'])) {
         // Checks if the search field is not empty
