@@ -5,6 +5,17 @@
 <main>
    <h2>Profile Page</h2>
    <small>{{ userData.name }} ({{ userData.type }})</small>
+
+   <div>
+      
+      <form action="playlists.php" method="post">
+         <select name="playlist-name">
+            <option value="a">a</option>
+         </select>
+         <button class="btn" type="submit" name="new-playlist-submit">Add</button>
+      </form>
+   </div>
+   
 </main>
 
 {% endblock %}

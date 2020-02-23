@@ -1,0 +1,40 @@
+{% extends 'layouts/layout.html' %}
+
+{% block content %}
+
+<main>
+   <div class="main-header">
+        <h2>{{ playlist.title }}</h2>
+        {% include('includes/search.html') %}
+    </div>
+
+    <div class="playlist-header">
+        <small>Uploaded by: {{ playlist.uname }}</small>
+        <small>{{ playlist.time_created }}</small>
+    </div>
+    
+    <div class="description">
+        <h3>Description</h3>
+        <p>{{ playlist.description }}</p>
+    </div>
+
+    <div class="video-grid">
+
+        {% for video in playlist_videos %}
+            <div class="video-card">
+                <a href="video.php?id={{ video.id }}"><h3>{{ video.title }}</h3></a>
+                    <p>{{ video.subject }}</p>
+                <a href="video.php?id={{ video.id }}">
+                    <img class="thumbnail" src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                </a>
+                <small>Uploaded by: {{ video.name }}</small>
+                <small>{{ video.upload_time }}</small>
+                <p class="rating">Rating: {{ video.rating }}</p>
+            </div>
+        {% endfor %}
+        
+    </div>
+</main>
+
+{% endblock %}
+

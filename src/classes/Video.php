@@ -45,6 +45,27 @@ class Video {
     }
 
     /**
+     * Method for getting info on single video
+     */
+    public function getVideoInfo($video) {
+        $id = htmlspecialchars($video);
+
+        $sql = 'SELECT videos.*, users.name
+            FROM videos
+            LEFT JOIN users ON videos.uploaded_by = users.id
+            WHERE videos.id = ?';
+
+        $sth = $this->db->prepare($sql);
+        $sth->execute(array($id));
+
+        if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+            return $row;
+        } else {
+            // Something bad TODO:
+        }
+    }
+
+    /**
      * AddVideo
      * @return tmp {array} status or error msg
      */
@@ -63,12 +84,12 @@ class Video {
             if (is_uploaded_file($_FILES['file-video']['tmp_name'])) {
 
                 if (move_uploaded_file($_FILES['file-video']['tmp_name'], $target_file)) {
-                    $sql = 'INSERT INTO videos (title, location, mime, description, subject, uploaded_by)
-                        VALUES (:title, :location, :mime, :description, :subject, :uploaded_by)';
-
                     $title = htmlspecialchars($_POST['title']);
                     $description = htmlspecialchars($_POST['description']);
                     $subject = htmlspecialchars($_POST['subject']);
+
+                    $sql = 'INSERT INTO videos (title, location, mime, description, subject, uploaded_by)
+                        VALUES (:title, :location, :mime, :description, :subject, :uploaded_by)';
 
                     $sth = $this->db->prepare($sql);
                     $sth->bindParam(':title', $title);
@@ -163,23 +184,6 @@ class Video {
         // echo '<img src="'.$thumbnail.'">';
     }
 
-    public function getVideoInfo($video) {
-        $id = htmlspecialchars($video);
-
-        $sql = 'SELECT videos.*, users.name
-            FROM videos
-            LEFT JOIN users ON videos.uploaded_by = users.id
-            WHERE videos.id = ?';
-
-        $sth = $this->db->prepare($sql);
-        $sth->execute(array($id));
-
-        if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-            return $row;
-        } else {
-            // Something bad TODO:
-        }
-    }
     // TODO: Its own search class ?
     public function videoSearch($data) {
         if (isset($_POST['search-submit'])) {

@@ -20,14 +20,15 @@ $playlist = new Playlist($db);
 // Render
 if ($user->loggedIn()) {
     $data = [
-        'title' => 'Recent Playlists',
+        'title' => 'Playlist',
         'loggedIn' => true,
         'userData' => $_SESSION,
         'get' => $_GET,
-        'playlists' => $playlist->getPlaylists(array('user' => 'all', 'limit' => '30')),
+        'playlist' => $playlist->getPlaylistInfo($_GET['id']),
+        'playlist_videos' => $playlist->getVideosInPlaylist($_GET['id']),
     ];
 
-    echo $twig->render('main/playlistsPage.html', $data);
+    echo $twig->render('playlist.html', $data);
 } else {
     header('Location: index.php?loggedIn=false');
 }

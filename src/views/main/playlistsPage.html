@@ -3,12 +3,36 @@
 {% block content %}
 
 <main>
-    {% include('includes/search.html') %}
-    <h2>Playlists</h2>
-    <div class="video-grid">
-        Playlists goes here!
-
+    <div class="main-header">
+        <h2>Most Recent Playlist</h2>
+        {% include('includes/search.html') %}
     </div>
+
+    {% if playlists.status != 'Error' %}
+        <div class="playlist-grid">
+
+            {% for playlist in playlists %}
+                <div class="playlist-card">
+                    <div>
+                        <a href="playlist.php?id={{ playlist.id }}">
+                            <h3>{{ playlist.title }}</h3>
+                            <img class="thumbnail" src="{{ playlist.thumbnail }}" alt="{{ playlist.title }}">
+                        </a>
+                    </div>
+                    <div>
+                        <small>Uploaded by: {{ playlist.uname }}</small>
+                        <small>{{ playlist.time_created }}</small> 
+                        <p>{{ playlist.subject }}</p>
+                    </div>
+                    <p>{{ playlist.description }}</p>
+                </div> 
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+        <p>No available playlists</p>
+    {% endif %}
 
 </main>
 

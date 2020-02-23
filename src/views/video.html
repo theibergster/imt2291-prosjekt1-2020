@@ -3,9 +3,12 @@
 {% block content %}
 
 <main>
-   {% include('includes/search.html') %}
-    <div class="video-header">
+   <div class="main-header">
         <h2>{{ video.title }}</h2>
+        {% include('includes/search.html') %}
+    </div>
+    
+    <div class="video-header">
         <small>Uploaded by: {{video.name }}</small>
         <small>{{video.upload_time}}</small>
     </div>

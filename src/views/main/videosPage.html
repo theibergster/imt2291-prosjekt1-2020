@@ -3,9 +3,10 @@
 {% block content %}
 
 <main>
-    {% include('includes/search.html') %}
-
-    <h2>Most Recent Videos</h2>
+    <div class="main-header">
+        <h2>Most Recent Videos</h2>
+        {% include('includes/search.html') %}
+    </div>
 
     {% if videos.status != 'Error' %}
         <div class="video-grid">
