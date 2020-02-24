@@ -8,6 +8,7 @@ class User {
 
         if (isset($_POST['login-submit'])) {
             if (!empty($_POST['email']) || !empty($_POST['pwd'])) {
+                $_SESSION = array();
                 $this->login();
             }
         } else if (isset($_POST['logout-submit'])) {

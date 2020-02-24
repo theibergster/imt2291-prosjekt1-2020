@@ -17,7 +17,7 @@
         <source src="{{ video.location }}" type="{{ video.mime }}">
     </video>
     
-    <div class="rate">
+    <div class="rating">
         <p>Rate this video</p>
         <form action="video.php?id={{ get.id }}" method="post">
             <select name="rating-value">
@@ -29,7 +29,9 @@
             </select>
             <button class="btn" type="submit" name="rate-submit">Rate</button>
         </form>
-        <form action="" method="post">
+        <p>Avg rating: {{ rating.total.avg_rating }} of {{ rating.total.tot_users_rate }} users</p>
+        <p>Your rating: {{ rating.user.user_rating }}</p>
+        <form action="video.php?id={{ get.id }}" method="post">
             <button class="btn" type="submit" name="like-submit">Like</button>
             <button class="btn" type="submit" name="dislike-submit">Dislike</button>
         </form>

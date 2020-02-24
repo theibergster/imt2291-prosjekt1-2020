@@ -17,8 +17,7 @@ $db = DB::getDBConnection();
 $user = new User($db);
 $video = new Video($db);
 
-
-
+// Render
 if ($user->loggedIn()) {
     $data = [
         'title' => 'Recent Videos',

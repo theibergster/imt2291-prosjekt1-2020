@@ -3,17 +3,17 @@
  * Class Rating for handling rating and likes of videos.
  * getTotalRating for a single video, getUserRating for the logged in
  */
-class Rate {
+class Rating {
     private $db;
 
     public function __construct($db) {
         $this->db = $db;
     }
 
-    public function getTotalRating($video) {
-        $video_id = htmlspecialchars($video);
+    public function getTotalRating($vid) {
+        $video_id = htmlspecialchars($vid);
 
-        $sql = 'SELECT AVG(rating) AS avg_rating
+        $sql = 'SELECT AVG(rating) AS avg_rating, COUNT(rating) AS tot_users_rate
             FROM rating
             WHERE video_id = ?';
 
@@ -22,26 +22,31 @@ class Rate {
 
 
         if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-            return $row;
+            $tmp['avg_rating'] = number_format($row['avg_rating'], 1);
+            $tmp['tot_users_rate'] = $row['tot_users_rate'];
+
         } else {
-            return array('status' => 'failed');
+            $tmp['error'] = 'failed to fetch rating';
         }
+        return $tmp;
     }
 
-    public function getUserRating($video) {
-        $video_id = htmlspecialchars($video);
+    public function getUserRating($vid) {
+        $video_id = htmlspecialchars($vid);
 
         $sql = 'SELECT rating AS user_rating
             FROM rating
-            WHERE video_id = ?
-            AND user_id = ?';
+            WHERE video_id = :vid
+            AND user_id = :uid';
 
         $sth = $this->db->prepare($sql);
-        $sth->execute(array($video_id, $_SESSION['uid']));
+        $sth->bindParam(':vid', $video_id);
+        $sth->bindParam(':uid', $_SESSION['uid']);
+        $sth->execute();
 
-        if ($row = $sth->fetch(PDO::FETCtmpH_ASSOC)) {
+        if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             $tmp['user_rating'] = $row['user_rating'];
-            $tmp['is_rated'] = true;
+            $tmp['is_rated'] = $sth->rowCount() > 0;
 
         } else {
             $tmp['user_rating'] = 'Not rated';
@@ -50,23 +55,26 @@ class Rate {
         return $tmp;
     }
 
-    public function rateVideo($video) {
-        $video_id = htmlspecialchars($video);
+    public function rateVideo($vid) {
+        $video_id = htmlspecialchars($vid);
         $rating = htmlspecialchars($_POST['rating-value']);
 
-        if ($this->getUserRating()['is_rated']) {
+        if ($this->getUserRating($video_id)['is_rated']) {
             $sql = 'UPDATE rating
-                SET rating = ?
-                WHERE video_id = ? 
-                AND user_id = ?';
+                SET rating = :rating
+                WHERE video_id = :vid 
+                AND user_id = :uid';
 
         } else {
             $sql = 'INSERT INTO rating (video_id, user_id, rating)
-                VALUES (?,?,?)';
+                VALUES (:vid, :uid, :rating)';
         }
 
         $sth = $this->db->prepare($sql);
-        $sth->execute(array($video_id, $SESSION['uid'], $rating));
+        $sth->bindParam(':rating', $rating);
+        $sth->bindParam(':vid', $video_id);
+        $sth->bindParam(':uid', $_SESSION['uid']);
+        $sth->execute();
 
         if ($sth->rowCount() == 1) {
             return array('status' => 'Success');
