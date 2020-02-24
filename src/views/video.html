@@ -16,7 +16,7 @@
     <video width="600" controls>
         <source src="{{ video.location }}" type="{{ video.mime }}">
     </video>
-    
+    <!-- Rating || Rate video -->
     <div class="rating">
         <p>Rate this video</p>
         <form action="video.php?id={{ get.id }}" method="post">
@@ -31,9 +31,16 @@
         </form>
         <p>Avg rating: {{ rating.total.avg_rating }} of {{ rating.total.tot_users_rate }} users</p>
         <p>Your rating: {{ rating.user.user_rating }}</p>
+
+        <!-- Rating || like / dislike video -->
         <form action="video.php?id={{ get.id }}" method="post">
-            <button class="btn" type="submit" name="like-submit">Like</button>
-            <button class="btn" type="submit" name="dislike-submit">Dislike</button>
+            {% if liked.check_user %}
+                <button class="btn" type="submit" name="dislike-submit">Dislike</button>
+            {% else %}
+                <button class="btn" type="submit" name="like-submit">Like</button>
+            {% endif %}
+            <small>{{ liked.get_total.tot_likes }}</small>
+            <p>{{ asd.status }}</p>
         </form>
     </div>
     <div class="description">

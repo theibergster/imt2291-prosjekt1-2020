@@ -23,6 +23,13 @@ if (isset($_POST['rate-submit'])) {
     $rating->rateVideo($_GET['id']);
 }
 
+// Like / Dislike video
+if (isset($_POST['like-submit'])) {
+    $asd = $rating->likeVideo($_GET['id']);
+} elseif (isset($_POST['dislike-submit'])) {
+    $rating->dislikeVideo($_GET['id']);
+}
+
 // Video comments
 if (isset($_POST['comment-submit'])) {
     $response = $video->addComment($_GET['id']); 
@@ -36,12 +43,16 @@ if ($user->loggedIn()) {
         'response' => $response,
         'userData' => $_SESSION,
         'get' => $_GET,
-        'video' => $video->getVideoInfo($_GET['id']), // video_info ?
+        'video' => $video->getVideoInfo($_GET['id']),
         'rating' => [
             'total' => $rating->getTotalRating($_GET['id']),
             'user' => $rating->getUserRating($_GET['id']),
         ],
-        // 'liked' => $rating->getUserLike($_GET['id']),
+        'liked' => [
+            'check_user' => $rating->checkLike($_GET['id']),
+            'get_total' => $rating->getTotalLikes($_GET['id']),
+        ],
+        
         'comments' => $video->getComments($_GET['id']),
     ];
     
