@@ -54,6 +54,7 @@ if ($user->loggedIn()) {
         ],
         
         'comments' => $video->getComments($_GET['id']),
+        'search_page' => 'index',
     ];
     
     echo $twig->render('video.html', $data);

@@ -7,6 +7,7 @@ require_once 'classes/DB.php';
 require_once 'classes/User.php';
 require_once 'classes/Admin.php';
 require_once 'classes/Video.php';
+require_once 'classes/Search.php';
 
 $loader = new \Twig\Loader\FilesystemLoader('./views');
 $twig = new \Twig\Environment($loader, [
@@ -16,6 +17,14 @@ $twig = new \Twig\Environment($loader, [
 $db = DB::getDBConnection();
 $user = new User($db);
 $video = new Video($db);
+$search = new Search($db);
+
+// Search
+if (isset($_POST['search-submit']) && !empty($_POST['search-query'])) {
+    $videos = $search->videoSearch($_POST['search-query']);
+} else {
+    $videos = $video->getVideos(array('user' => 'all', 'limit' => '50'));
+}
 
 // Render
 if ($user->loggedIn()) {
@@ -24,7 +33,8 @@ if ($user->loggedIn()) {
         'loggedIn' => true,
         'userData' => $_SESSION,
         'get' => $_GET,
-        'videos' => $video->getVideos(array('user' => 'all', 'limit' => '50')),
+        'videos' => $videos,
+        'search_page' => 'index',
     ];
     echo $twig->render('main/videosPage.html', $data);
 } else {

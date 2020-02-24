@@ -29,7 +29,9 @@ class User {
         $email = htmlspecialchars($_POST['email']);
         $pwd = htmlspecialchars($_POST['pwd']);
 
-        $sql = 'SELECT * FROM users WHERE email=?';
+        $sql = 'SELECT * FROM users 
+                WHERE email=?';
+
         $sth = $this->db->prepare($sql);
         $sth->execute(array($email));
 
@@ -51,7 +53,9 @@ class User {
     }
 
     public function addUser() {
-        $sql = 'INSERT INTO users (name, email, password, type) VALUES (?,?,?,?)';
+        $sql = 'INSERT INTO users (name, email, password, type) 
+                VALUES (?,?,?,?)';
+                
         $hashed_pwd = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
         $sth = $this->db->prepare($sql);
         $sth->execute([$_POST['name'], $_POST['email'], $hashed_pwd, $_POST['user-type']]);

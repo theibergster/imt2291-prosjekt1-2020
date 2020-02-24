@@ -39,8 +39,7 @@
             {% else %}
                 <button class="btn" type="submit" name="like-submit">Like</button>
             {% endif %}
-            <small>{{ liked.get_total.tot_likes }}</small>
-            <p>{{ asd.status }}</p>
+            <p>Likes: {{ liked.get_total.tot_likes }}</p>
         </form>
     </div>
     <div class="description">

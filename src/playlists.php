@@ -6,6 +6,7 @@ require_once '../../vendor/autoload.php';
 require_once 'classes/DB.php';
 require_once 'classes/User.php';
 require_once 'classes/Playlist.php';
+require_once 'classes/Search.php';
 
 $loader = new \Twig\Loader\FilesystemLoader('./views');
 $twig = new \Twig\Environment($loader, [
@@ -15,7 +16,14 @@ $twig = new \Twig\Environment($loader, [
 $db = DB::getDBConnection();
 $user = new User($db);
 $playlist = new Playlist($db);
+$search = new Search($db);
 
+// Search
+if (isset($_POST['search-submit']) && !empty($_POST['search-query'])) {
+    $playlist = $search->playlistSearch($_POST['search-query']);
+} else {
+    $playlist = $playlist->getPlaylists(array('user' => 'all', 'limit' => '30'));
+}
 
 // Render
 if ($user->loggedIn()) {
@@ -24,7 +32,8 @@ if ($user->loggedIn()) {
         'loggedIn' => true,
         'userData' => $_SESSION,
         'get' => $_GET,
-        'playlists' => $playlist->getPlaylists(array('user' => 'all', 'limit' => '30')),
+        'playlists' => $playlist,
+        'search_page' => 'playlists',
     ];
 
     echo $twig->render('main/playlistsPage.html', $data);

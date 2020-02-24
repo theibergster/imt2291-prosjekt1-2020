@@ -1,6 +1,6 @@
 <div class="search-bar">
-    <form action="includes/search.php" method="post">
-        <input type="text" name="search" placeholder="Search">
-        <button class="btn" type="search-submit">Search</button>
+    <form action="{{ search_page }}.php" method="post">
+        <input type="text" name="search-query" placeholder="Search">
+        <button class="btn" type="submit" name="search-submit">Search</button>
     </form>
 </div>

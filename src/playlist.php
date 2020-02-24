@@ -26,6 +26,7 @@ if ($user->loggedIn()) {
         'get' => $_GET,
         'playlist' => $playlist->getPlaylistInfo($_GET['id']),
         'playlist_videos' => $playlist->getVideosInPlaylist($_GET['id']),
+        'search_page' => 'playlists',
     ];
 
     echo $twig->render('playlist.html', $data);

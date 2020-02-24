@@ -19,7 +19,8 @@ if ($user->loggedIn()) {
     $data = [
         'title' => 'Profile Page',
         'loggedIn' => true,
-        'userData' => $_SESSION
+        'userData' => $_SESSION,
+        'search_page' => 'index',
     ];
 
     echo $twig->render('profile/profilePage.html', $data);

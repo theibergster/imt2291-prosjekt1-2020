@@ -12,19 +12,19 @@ class Playlist {
     public function getPlaylists($data) {
         if ($data['user'] == 'all') {
             $sql = 'SELECT playlists.*, users.name AS uname, COUNT(playlist_videos.video_id) AS tot_videos
-                FROM users
-                LEFT JOIN playlists ON users.id = playlists.created_by
-                RIGHT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
-                GROUP BY playlists.id
-                ORDER BY playlists.time_created DESC LIMIT ' . $data['limit'];
+                    FROM users
+                    LEFT JOIN playlists ON users.id = playlists.created_by
+                    RIGHT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
+                    GROUP BY playlists.id
+                    ORDER BY playlists.time_created DESC LIMIT ' . $data['limit'];
         } else {
             $sql = 'SELECT playlists.*, users.name, users.email, COUNT(playlist_videos.video_id) AS tot_videos
-                FROM users
-                LEFT JOIN playlists ON users.id = playlists.created_by
-                RIGHT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
-                WHERE users.id = ?
-                GROUP BY playlists.id
-                ORDER BY playlists.time_created DESC LIMIT ' . $data['limit'];
+                    FROM users
+                    LEFT JOIN playlists ON users.id = playlists.created_by
+                    RIGHT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
+                    WHERE users.id = ?
+                    GROUP BY playlists.id
+                    ORDER BY playlists.time_created DESC LIMIT ' . $data['limit'];
         }
 
         $sth = $this->db->prepare($sql);
@@ -46,9 +46,9 @@ class Playlist {
         $id = htmlspecialchars($vid);
 
         $sql = 'SELECT playlists.*, users.name AS uname
-            FROM playlists
-            LEFT JOIN users ON playlists.created_by = users.id
-            WHERE playlists.id = ?';
+                FROM playlists
+                LEFT JOIN users ON playlists.created_by = users.id
+                WHERE playlists.id = ?';
 
         $sth = $this->db->prepare($sql);
         $sth->execute(array($id));
@@ -66,7 +66,7 @@ class Playlist {
         $subject = htmlspecialchars($_POST['subject']); // TODO: add subject and thumbnail
 
         $sql = 'INSERT INTO playlists (title, description)
-            VALUES (:title, :description)';
+                VALUES (:title, :description)';
 
         $sth = $this->db->prepare($sql);
         $sth->bindParam(':title', $title);
@@ -86,7 +86,7 @@ class Playlist {
 
     public function addToPlaylist($data) {
         $sql = 'INSERT INTO playlists_videos (playlist_id, video_id)
-            VALUES (:playlist, :video)';
+                VALUES (:playlist, :video)';
         
 
     }
@@ -95,10 +95,10 @@ class Playlist {
         $id = htmlspecialchars($pid);
 
         $sql = 'SELECT videos.*, users.name AS uname
-            FROM playlist_videos
-            LEFT JOIN videos ON playlist_videos.video_id = videos.id
-            INNER JOIN users ON videos.uploaded_by = users.id
-            WHERE playlist_videos.playlist_id = ?';
+                FROM playlist_videos
+                LEFT JOIN videos ON playlist_videos.video_id = videos.id
+                INNER JOIN users ON videos.uploaded_by = users.id
+                WHERE playlist_videos.playlist_id = ?';
 
         $sth = $this->db->prepare($sql);
         $sth->execute(array($id));

@@ -39,7 +39,7 @@ class Video {
             return $row;
         } else {
             $tmp['status'] = 'Error';
-            $tmp['error'] = 'No videos found';
+            $tmp['error'] = 'No videos available';
         }
         return $tmp;
     }
@@ -188,10 +188,10 @@ class Video {
         $id = htmlspecialchars($vid);
 
         $sql = 'SELECT comments.*, users.name AS uname
-            From comments
-            LEFT JOIN users ON comments.user_id = users.id
-            WHERE video_id = ?
-            ORDER BY comments.time DESC';
+                From comments
+                LEFT JOIN users ON comments.user_id = users.id
+                WHERE video_id = ?
+                ORDER BY comments.time DESC';
 
         $sth = $this->db->prepare($sql);
         $sth->execute(array($id));
@@ -208,7 +208,7 @@ class Video {
             $id = htmlspecialchars($vid);
 
             $sql = 'INSERT INTO comments (user_id, video_id, comment)
-                VALUES (:uid, :vid, :comment)';
+                    VALUES (:uid, :vid, :comment)';
 
             $sth = $this->db->prepare($sql);
             $sth->bindParam(':uid', $_SESSION['uid']);
@@ -228,35 +228,5 @@ class Video {
         }
 
         return $tmp;
-    }
-
-    // TODO: Its own search class ?
-    public function videoSearch($data) {
-        if (isset($_POST['search-submit'])) {
-        // Checks if the search field is not empty
-            if (!empty($_POST['search-query'])) {
-                header('Location: ../index.php?search='.$_POST['search-query']);
-
-                $query = htmlspecialchars("%{$_POST['search-query']}%");
-
-                $sql = 'SELECT videos.*, users.email, users.name
-                    FROM users 
-                    INNER JOIN videos ON users.id = videos.id 
-                    WHERE (video.title LIKE ?) 
-                    OR (video.description LIKE ?)
-                    OR (users.name LIKE ?)
-                    ORDER BY videos.upload_time DESC';
-                
-                $sth = $this->db->prepare($sql);
-                $sth->execute(array($query, $query, $query));
-
-                if ($sth->rowCount >= 1) {
-                    return $sth->fetchAll(PDO::FETCH_ASSOC);
-                } else {
-                    return array('status' => 'No results');
-                }                
-                
-            } 
-        }
     }
 }
