@@ -23,17 +23,8 @@
         <button class="btn" type="submit" name="file-submit">Add video</button>
     </form>
     
-    {% if response.error or response.errorMessage %}
-        <div class="response-failed">
-            <p>{{ response.status }} - {{ response.error }}{{ response.errorMessage }}</p>
-            <p>{{ response.thumbnail.status }}</p>
-        </div>
-    {% elseif response.id %}
-        <div class="response-success">
-            <p>{{ response.status }} - {{ response.id }}</p>
-            <p>{{ response.thumbnail.status }}</p>
-        </div>
-    {% endif %}
+    {% include('includes/response.html') %}
+    
 </main>
 
 {% endblock %}

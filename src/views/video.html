@@ -16,8 +16,7 @@
     <video width="600" controls>
         <source src="{{ video.location }}" type="{{ video.mime }}">
     </video>
-    <p>{{ video.location }}</p>
-
+    
     <div class="rate">
         <p>Rate this video</p>
         <form action="video.php?id={{ get.id }}" method="post">
@@ -46,18 +45,9 @@
         <button class="btn" type="submit" name="comment-submit">Comment</button>
     </form>
 
-    {% if response.error or response.errorMessage %}
-        <div class="response-failed">
-            <p>{{ response.status }} - {{ response.error }}{{ response.errorMessage }}</p>
-        </div>
-    {% elseif response.id %}
-        <div class="response-success">
-            <p>{{ response.status }} {{ response.id }}</p>
-        </div>
-    {% endif %}
+    {% include('includes/response.html') %}
 
-    <!-- Comment list TODO: Add check if comments -->
-    
+    <!-- Comment section || list of comments -->
     <div class="comments-list">
         {% if comments.error != 'Error' %}
 
@@ -72,7 +62,7 @@
                     </div>
                 </div>
             {% endfor %}
-            
+
         {% else %}
             <p>No comments to show..</p>
         {% endif %}

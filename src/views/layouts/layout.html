@@ -9,15 +9,13 @@
 </head>
     <body>
         <header>
-            <h1><a href="index.php">Webbusito</a></h1>
-
+            <h1 class="logo">Webbusito</h1>
             
             {% if loggedIn %}
                 <nav>
                     <ul>
                         <li><a href="index.php">Videos</a></li>
                         <li><a href="playlists.php">Playlists</a></li>
-                        <li><a href="#">Users</a></li>
                         <li><a href="#">My Subscriptions</a></li>
                         <li><a href="uploadvideo.php">Upload</a></li>
                     </ul>
@@ -30,7 +28,7 @@
                     </form>
                 </div>
             {% else %}
-                <p>Please log in or create a new user</p>
+                <p class="header-text">Please log in or create a new user</p>
                 <div class="header-login">
                     <form action="index.php" method="post">
                         <input type="email" name="email" placeholder="Email" value="{{ get['email'] }}">

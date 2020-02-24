@@ -37,10 +37,11 @@ if ($user->loggedIn()) {
         'userData' => $_SESSION,
         'get' => $_GET,
         'video' => $video->getVideoInfo($_GET['id']), // video_info ?
-        'rate' => [
-            // 'total' => $rating->getTotalRating($_GET['id']),
-            // 'user' => $rating->getUserRating($_GET['id']),
-        ],
+        // 'rate' => [
+        //     'total' => $rating->getTotalRating($_GET['id']),
+        //     'user' => $rating->getUserRating($_GET['id']),
+        // ],
+        // 'liked' => $rating->getUserLike($_GET['id']),
         'comments' => $video->getComments($_GET['id']),
     ];
     

@@ -75,8 +75,9 @@ header {
   padding: .5rem 1rem;
   height: 5rem;
   display: grid;
-  grid-template-columns: 1fr 2fr 2fr;
+  grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
+  justify-content: space-around;
 }
 
 header input,
@@ -91,14 +92,20 @@ header input::placeholder {
   justify-content: space-evenly;
 }
 
+.logo,
+.header-text,
+nav {
+  place-self: center;
+}
+
 /* Navigation */
 
 nav {
   display: flex;
   height: 7vh;
-  justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
+
 }
 
 nav ul {

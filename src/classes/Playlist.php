@@ -11,15 +11,19 @@ class Playlist {
 
     public function getPlaylists($data) {
         if ($data['user'] == 'all') {
-            $sql = 'SELECT playlists.*, users.name, users.email, users.id AS uid
-                FROM playlists
-                LEFT JOIN users ON playlists.created_by = users.id
-                ORDER BY playlists.created_by DESC LIMIT ' . $data['limit'];
-        } else {
-            $sql = 'SELECT playlists.*, users.name, users.email
+            $sql = 'SELECT playlists.*, users.name AS uname, COUNT(playlist_videos.video_id) AS tot_videos
                 FROM users
-                RIGHT JOIN playlists ON users.id = playlists.created_by
+                LEFT JOIN playlists ON users.id = playlists.created_by
+                RIGHT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
+                GROUP BY playlists.id
+                ORDER BY playlists.time_created DESC LIMIT ' . $data['limit'];
+        } else {
+            $sql = 'SELECT playlists.*, users.name, users.email, COUNT(playlist_videos.video_id) AS tot_videos
+                FROM users
+                LEFT JOIN playlists ON users.id = playlists.created_by
+                RIGHT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
                 WHERE users.id = ?
+                GROUP BY playlists.id
                 ORDER BY playlists.time_created DESC LIMIT ' . $data['limit'];
         }
 

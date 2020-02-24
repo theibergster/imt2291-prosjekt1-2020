@@ -18,15 +18,8 @@
         <button class="btn" type="submit" name="signup-submit">Sign up!</button>
     </form>
 
-    {% if response.error or response.errorMessage %}
-        <div class="response-failed">
-            <p>{{ response.status }} - {{ response.error }}{{ response.errorMessage }}</p>
-        </div>
-    {% elseif response.id %}
-        <div class="response-success">
-            <p>{{ response.status }} - {{ response.id }}</p>
-        </div>
-    {% endif %}
+    {% include('includes/response.html') %}
+    
 </main>
 
 {% endblock %}
