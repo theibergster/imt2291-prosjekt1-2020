@@ -226,7 +226,7 @@ class Video {
         } else {
             $tmp['error'] = 'Emtpy field';
         }
-
+        $_POST = array();
         return $tmp;
     }
 }

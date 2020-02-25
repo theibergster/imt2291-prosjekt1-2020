@@ -7,41 +7,45 @@
         <h2>{{ video.title }}</h2>
         {% include('includes/search.html') %}
     </div>
-
-    <div class="video-header">
-        <small>Uploaded by: {{ video.name }}</small>
-        <small>{{ video.upload_time }}</small>
+    <div class="video-top-section">
+        <div class="video-header">
+            <small>Uploaded by: {{ video.name }} @ {{ video.upload_time }}</small>
+        </div>
+        
+        <video width="600" controls>
+            <source src="{{ video.location }}" type="{{ video.mime }}">
+        </video>
+        <!-- Rating || Rate video -->
+    
+        <div class="rating">
+            <p>Rate this video</p>
+            <form action="video.php?id={{ get.id }}" method="post">
+                <select name="rating-value">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <button class="btn" type="submit" name="rate-submit">Rate</button>
+            </form>
+            <p>Avg rating: {{ rating.total.avg_rating }} of {{ rating.total.tot_users_rate }} users</p>
+            <p>Your rating: {{ rating.user.user_rating }}</p>
+        </div>
+        <!-- Rating || like / dislike video -->
+        <div class="like">
+            <form action="video.php?id={{ get.id }}" method="post">
+                {% if liked.check_user %}
+                    <button class="btn" type="submit" name="dislike-submit">Dislike</button>
+                {% else %}
+                    <button class="btn" type="submit" name="like-submit">Like</button>
+                {% endif %}
+                <p>Likes: {{ liked.get_total.tot_likes }}</p>
+            </form>
+        </div>
     </div>
     
-    <video width="600" controls>
-        <source src="{{ video.location }}" type="{{ video.mime }}">
-    </video>
-    <!-- Rating || Rate video -->
-    <div class="rating">
-        <p>Rate this video</p>
-        <form action="video.php?id={{ get.id }}" method="post">
-            <select name="rating-value">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
-            <button class="btn" type="submit" name="rate-submit">Rate</button>
-        </form>
-        <p>Avg rating: {{ rating.total.avg_rating }} of {{ rating.total.tot_users_rate }} users</p>
-        <p>Your rating: {{ rating.user.user_rating }}</p>
-
-        <!-- Rating || like / dislike video -->
-        <form action="video.php?id={{ get.id }}" method="post">
-            {% if liked.check_user %}
-                <button class="btn" type="submit" name="dislike-submit">Dislike</button>
-            {% else %}
-                <button class="btn" type="submit" name="like-submit">Like</button>
-            {% endif %}
-            <p>Likes: {{ liked.get_total.tot_likes }}</p>
-        </form>
-    </div>
+    <!-- Comment section || Description -->
     <div class="description">
         <h3>Description</h3>
         <p>{{ video.description }}</p>
@@ -49,7 +53,7 @@
     <!-- Comment section || Add comment-->
     <form class="add-comment" action="video.php?id={{ get.id }}" method="post">
         <label for="comment">Add Comment</label>
-        <textarea name="comment" id="comment" cols="30" rows="10" placeholder="Add a comment.."></textarea>
+        <textarea name="comment" id="comment" placeholder="Write your comment here.." required></textarea>
         <button class="btn" type="submit" name="comment-submit">Comment</button>
     </form>
 

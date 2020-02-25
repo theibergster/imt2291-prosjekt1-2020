@@ -27,7 +27,7 @@ CREATE TABLE `comments` (
   `user_id` bigint(20) NOT NULL,
   `video_id` bigint(20) NOT NULL,
   `time` timestamp NOT NULL,
-  `comment` varchar(512) NOT NULL,
+  `comment` text NOT NULL,
   PRIMARY KEY (`user_id`,`video_id`,`time`),
   FOREIGN KEY (`user_id`) REFERENCES users (id),
   FOREIGN KEY (`video_id`) REFERENCES videos (id)

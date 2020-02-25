@@ -45,9 +45,11 @@ class Rating {
         $sth->execute();
 
         if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-            $tmp['user_rating'] = $row['user_rating'];
-            $tmp['liked'] = $row['liked'];
+            $tmp = $row;
             $tmp['is_rated'] = $sth->rowCount() > 0;
+            if ($tmp['user_rating'] == null) {
+                $tmp['user_rating'] = 'Not rated';
+            }
 
         } else {
             $tmp['user_rating'] = 'Not rated';
