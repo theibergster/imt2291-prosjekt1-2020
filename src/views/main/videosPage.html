@@ -8,26 +8,7 @@
         {% include('includes/search.html') %}
     </div>
 
-    {% if videos.status != 'Error' %}
-        <div class="video-grid">
-
-            {% for video in videos %}
-                <div class="video-card">
-                    <a href="video.php?id={{ video.id }}"><h3>{{ video.title }}</h3></a>
-                    <p>{{ video.subject }}</p>
-                    <a href="video.php?id={{ video.id }}">
-                        <img class="thumbnail" src="{{ video.thumbnail }}" alt="{{ video.title }}">
-                    </a>
-                    <small>Uploaded by: {{ video.name }}</small>
-                    <small>{{ video.upload_time }}</small>
-                </div> 
-            {% endfor %}
-
-        </div>
-
-    {% else %}
-        <p>{{ videos.error }}</p>
-    {% endif %}
+    {% include('includes/getVideos.html') %}
 
 </main>
 

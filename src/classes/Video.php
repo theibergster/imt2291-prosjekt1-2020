@@ -39,7 +39,7 @@ class Video {
             return $row;
         } else {
             $tmp['status'] = 'Error';
-            $tmp['error'] = 'No videos available';
+            $tmp['error'] = 'No videos found..';
         }
         return $tmp;
     }

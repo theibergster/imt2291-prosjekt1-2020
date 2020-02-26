@@ -34,7 +34,7 @@ class Playlist {
             return $row;
         } else {
             $tmp['status'] = 'Error';
-            $tmp['error'] = 'No videos found';
+            $tmp['error'] = 'No playlists found..';
         }
         return $tmp;
     }

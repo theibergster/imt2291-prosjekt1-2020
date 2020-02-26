@@ -3,13 +3,30 @@
 {% block content %}
 
 <main>
-   <h2>{{ userData.name }}</h2>
-   <small>({{ userData.type }})</small>
-
-   <div>
-      <p>This is the profile page.</p>
-      
+   <div class="profile-header">
+      <h2>Profile page</h2>
    </div>
+
+   <div class="profile-user-info description">
+      <h3>{{ userData.name }} <small>({{ userData.type }})</small></h3>
+
+      <ul>
+         <li>Email: {{ userData.email }}</li>
+         <li>Email: {{ userData.email }}</li>
+      </ul>
+   </div>
+
+   <!-- List of user playlists if any -->
+   <div class="profile-videos">
+      <h3>My playlists</h3>
+      {% include('includes/getPlaylists.html') %}
+   </div>
+
+   <div class="profile-videos">
+      <h3>My videos</h3>
+      {% include('includes/getVideos.html') %}
+   </div>
+
    
 </main>
 

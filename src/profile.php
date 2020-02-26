@@ -5,6 +5,8 @@ session_start();
 require_once '../../vendor/autoload.php';
 require_once 'classes/DB.php';
 require_once 'classes/User.php';
+require_once 'classes/Playlist.php';
+require_once 'classes/video.php';
 
 $loader = new \Twig\Loader\FilesystemLoader('./views');
 $twig = new \Twig\Environment($loader, [
@@ -13,6 +15,8 @@ $twig = new \Twig\Environment($loader, [
 
 $db = DB::getDBConnection();
 $user = new User($db);
+$playlist = new Playlist($db);
+$video = new Video($db);
 
 
 if ($user->loggedIn()) {
@@ -21,6 +25,8 @@ if ($user->loggedIn()) {
         'loggedIn' => true,
         'userData' => $_SESSION,
         'search_page' => 'index',
+        'playlists' => $playlist->getPlaylists(array('user' => $_SESSION['uid'], 'limit' => '30')),
+        'videos' => $video->getvideos(array('user' => $_SESSION['uid'], 'limit' => '50')),
     ];
 
     echo $twig->render('profile/profilePage.html', $data);
