@@ -50,7 +50,7 @@ class Video {
     public function getVideoInfo($video) {
         $id = htmlspecialchars($video);
 
-        $sql = 'SELECT videos.*, users.name
+        $sql = 'SELECT videos.*, users.name, users.id AS uid
             FROM videos
             LEFT JOIN users ON videos.uploaded_by = users.id
             WHERE videos.id = ?';
@@ -228,5 +228,26 @@ class Video {
         }
         $_POST = array();
         return $tmp;
+    }
+
+    public function deleteComment($commentData) {
+        $uid = htmlspecialchars($commentData['cid']);
+        $vid = htmlspecialchars($commentData['vid']);
+        $time = htmlspecialchars($commentData['time']);
+
+        $sql = 'DELETE FROM comments
+                WHERE user_id = :uid
+                AND video_id = :vid
+                AND time = :time';
+
+        $sth = $this->db->prepare($sql);
+        $sth->bindParam(':uid', $uid);
+        $sth->bindParam(':vid', $vid);
+        $sth->bindParam(':time', $time);
+        $sth->execute();
+
+        if ($sth->rowCount() > 0) {
+            return 'success';
+        }
     }
 }

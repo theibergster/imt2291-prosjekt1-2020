@@ -3,17 +3,12 @@
 {% block content %}
 
 <main>
-   <h2>Profile Page</h2>
-   <small>{{ userData.name }} ({{ userData.type }})</small>
+   <h2>{{ userData.name }}</h2>
+   <small>({{ userData.type }})</small>
 
    <div>
+      <p>This is the profile page.</p>
       
-      <form action="playlists.php" method="post">
-         <select name="playlist-name">
-            <option value="a">a</option>
-         </select>
-         <button class="btn" type="submit" name="new-playlist-submit">Add</button>
-      </form>
    </div>
    
 </main>

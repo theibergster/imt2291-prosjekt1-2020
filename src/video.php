@@ -35,6 +35,14 @@ if (isset($_POST['comment-submit'])) {
     $response = $video->addComment($_GET['id']); 
 }
 
+// Delete comment
+if (isset($_POST['delete-comment-submit'])) {
+    $commentData['cid'] = $_POST['comment-uid'];
+    $commentData['vid'] = $_POST['comment-vid'];
+    $commentData['time'] = $_POST['comment-time'];
+    $video->deleteComment($commentData);
+} 
+
 // Render
 if ($user->loggedIn()) {
     $data = [

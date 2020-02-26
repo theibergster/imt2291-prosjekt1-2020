@@ -75,6 +75,23 @@ class User {
         return $tmp;
     }
 
+    public function checkUserType($uid) {
+        $uid = htmlspecialchars($uid);
+
+        $sql = 'SELECT type
+                FROM users
+                WHERE id = ?';
+
+        $sth = $this->db->prepare($sql);
+        $sth->execute(array($uid));
+
+        if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+            return $row;
+        } else {
+            return array('error' => 'error');
+        }
+    }
+
     public function validateUserSignup($name, $email, $pwd, $pwd_repeat) {
         if (isset($_POST['signup-submit'])) {
             if (empty($name) || empty($email) || empty($pwd) || empty($pwd_repeat)) {

@@ -10,7 +10,6 @@ class Search {
     }
 
     public function videoSearch($query) {
-        $q = htmlspecialchars($query);
         $query = htmlspecialchars("%{$query}%");
 
         $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid
@@ -29,14 +28,13 @@ class Search {
             return $row;
         } else {
             $tmp['status'] = 'Error';
-            $tmp['error'] = 'No results for: \'' . $q .'\'';
+            $tmp['error'] = 'No results for \'' . trim($query, '%') . '\'';
         }
         
         return $tmp;
     }
 
     public function playlistSearch($query) {
-        $q = htmlspecialchars($query);
         $query = htmlspecialchars("%{$query}%");
 
         $sql = 'SELECT playlists.*, users.name AS uname, COUNT(playlist_videos.video_id) AS tot_videos
@@ -57,7 +55,7 @@ class Search {
             return $row;
         } else {
             $tmp['status'] = 'Error';
-            $tmp['error'] = 'No results for: \'' . $q .'\'';
+            $tmp['error'] = 'No results for \'' . trim($query, '%') . '\'';
         }
         
         return $tmp;

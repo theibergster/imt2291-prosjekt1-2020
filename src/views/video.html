@@ -71,6 +71,15 @@
                     </div>
                     <div class="comment-body">
                         <p>{{ comment.comment }}</p>
+                        <!-- Delete button for comments -->
+                        {% if comment.user_id == userData.uid or userData.type == 'admin' %}
+                            <form action="video.php?id={{ get.id }}" method="post">
+                                <input type="hidden" value="{{ comment.user_id }}" name="comment-uid">
+                                <input type="hidden" value="{{ comment.video_id }}" name="comment-vid">
+                                <input type="hidden" value="{{ comment.time }}" name="comment-time">
+                                <button class="btn" type="submit" name="delete-comment-submit">Delete</button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
