@@ -11,17 +11,17 @@ class Playlist {
 
     public function getPlaylists($data) {
         if ($data['user'] == 'all') {
-            $sql = 'SELECT playlists.*, users.name AS uname, COUNT(playlist_videos.video_id) AS tot_videos
-                    FROM users
-                    LEFT JOIN playlists ON users.id = playlists.created_by
-                    RIGHT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
+            $sql = 'SELECT playlists.*, COUNT(playlist_videos.video_id) AS tot_videos, users.id AS uid, users.name AS uname
+                    FROM playlists
+                    LEFT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
+                    INNER JOIN users ON playlists.created_by = users.id
                     GROUP BY playlists.id
                     ORDER BY playlists.time_created DESC LIMIT ' . $data['limit'];
         } else {
-            $sql = 'SELECT playlists.*, users.name, users.email, COUNT(playlist_videos.video_id) AS tot_videos
-                    FROM users
-                    LEFT JOIN playlists ON users.id = playlists.created_by
-                    RIGHT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
+            $sql = 'SELECT playlists.*, COUNT(playlist_videos.video_id) AS tot_videos, users.id AS uid, users.name AS uname
+                    FROM playlists
+                    LEFT JOIN playlist_videos ON playlists.id = playlist_videos.playlist_id
+                    INNER JOIN users ON playlists.created_by = users.id
                     WHERE users.id = ?
                     GROUP BY playlists.id
                     ORDER BY playlists.time_created DESC LIMIT ' . $data['limit'];
@@ -45,7 +45,7 @@ class Playlist {
     public function getPlaylistInfo($vid) {
         $id = htmlspecialchars($vid);
 
-        $sql = 'SELECT playlists.*, users.name AS uname
+        $sql = 'SELECT playlists.*, users.id AS uid, users.name AS uname
                 FROM playlists
                 LEFT JOIN users ON playlists.created_by = users.id
                 WHERE playlists.id = ?';
@@ -60,17 +60,17 @@ class Playlist {
         }
     }
     
-    public function createPlaylist() {
-        $title = htmlspecialchars($_POST['title']);
-        $description = htmlspecialchars($_POST['description']);
-        $subject = htmlspecialchars($_POST['subject']); // TODO: add subject and thumbnail
+    public function createPlaylist($title) {
+        $title = htmlspecialchars($title);
+        // $description = htmlspecialchars($_POST['description']);
+        // $subject = htmlspecialchars($_POST['subject']); // TODO: add subject and thumbnail
 
-        $sql = 'INSERT INTO playlists (title, description)
-                VALUES (:title, :description)';
+        $sql = 'INSERT INTO playlists (title, created_by)
+                VALUES (:title, :uid)';
 
         $sth = $this->db->prepare($sql);
         $sth->bindParam(':title', $title);
-        $sth->bindParam(':description', $description);
+        $sth->bindParam(':uid', $_SESSION['uid']);
         $sth->execute();
 
         if ($sth->rowCount() == 1) {
@@ -79,6 +79,63 @@ class Playlist {
         } else {
             $tmp['status'] = 'Error';
             $tmp['error'] = 'Could not create playlist';
+        }
+
+        return $tmp;
+    }
+
+    public function editPlaylistDescription($data) {
+        $pid = htmlspecialchars($data['pid']);
+        $desc = htmlspecialchars($data['desc']);
+
+        $sql = 'UPDATE playlists
+                SET description = :desc 
+                WHERE playlists.id = :pid';
+
+        $sth = $this->db->prepare($sql);
+        $sth->bindParam(':desc', $desc);
+        $sth->bindParam(':pid', $pid);
+        $sth->execute();
+        
+        if ($sth->rowCount() == 1) {
+            $tmp['status'] = 'Success';
+            $tmp['id'] = $this->db->lastInsertId();
+        } else {
+            $tmp['status'] = 'Error';
+        }
+
+        return $tmp;
+    }
+
+    public function deletePlaylist($pid) {
+        $sql = 'DELETE FROM playlist_videos
+                WHERE playlist_id = ?';
+
+        $sth = $this->db->prepare($sql);
+        $sth->execute(array($pid));
+
+        if ($sth->rowCount() == 1) {
+            $tmp['status'] = 'Success';
+        } else {
+            $tmp['status'] = 'Error';
+        }
+        
+        $this->deletePlaylistCleanup($pid);
+
+        return $tmp;
+    }
+
+    public function deletePlaylistCleanup($pid) {
+        $sql = 'DELETE FROM playlists
+                WHERE id = ?';
+        
+        $sth = $this->db->prepare($sql);
+        $sth->execute(array($pid));
+
+        if ($sth->rowCount() == 1) {
+            $tmp['status'] = 'Success';
+        } else {
+            $tmp['status'] = 'Error';
         }
 
         return $tmp;
@@ -96,7 +153,7 @@ class Playlist {
 
         $sql = 'SELECT videos.*, users.name AS uname
                 FROM playlist_videos
-                LEFT JOIN videos ON playlist_videos.video_id = videos.id
+                INNER JOIN videos ON playlist_videos.video_id = videos.id
                 INNER JOIN users ON videos.uploaded_by = users.id
                 WHERE playlist_videos.playlist_id = ?';
 

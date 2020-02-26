@@ -1,0 +1,19 @@
+{% extends 'layouts/layout.html' %}
+
+{% block content %}
+
+<main>
+    <h2>Edit description</h2>
+    <small>{{ playlist.name }}</small>
+
+    <form action="playlist.php?id={{ playlist.id }}" method="post">
+        <input type="hidden" name="description-pid" value="{{ playlist.id }}">
+        <textarea name="new-description">{{ playlist.description }}</textarea>
+        <button class="btn" type="submit" name="edit-description-submit">Submit</button>
+    </form>
+
+    {% include('includes/response.html') %}
+    
+</main>
+
+{% endblock %}

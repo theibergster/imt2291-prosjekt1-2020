@@ -12,8 +12,7 @@ body {
   color: #333;
 }
 
-h1, h2, h3 {
-  letter-spacing: .1rem;
+h1, h2, h3, h4 {
   font-family: 'Open Sans';
 }
 
@@ -28,6 +27,10 @@ a:hover {
 
 ul {
   list-style: none;
+}
+
+.error {
+  margin: 1rem 0;
 }
 
 /* Form inputs */ 
@@ -152,8 +155,17 @@ main {
   margin: 1rem 0;
 }
 
-.profile-videos h3 {
+.profile-page h4 {
   margin: 1rem 0;
+}
+
+.profile-pl label {
+  display: block;
+}
+
+.profile-pl input {
+  margin-left: 0;
+  margin-bottom: 1rem;
 }
 
 /*** Videos page ***/

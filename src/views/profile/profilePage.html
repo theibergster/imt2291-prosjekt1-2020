@@ -2,31 +2,115 @@
 
 {% block content %}
 
-<main>
-   <div class="profile-header">
-      <h2>Profile page</h2>
-   </div>
+<main class="profile-page">
+    <h2>Profile page</h2>
 
-   <div class="profile-user-info description">
-      <h3>{{ userData.name }} <small>({{ userData.type }})</small></h3>
+    <div class="profile-user-info description">
+        <h3>{{ userData.name }} <small>({{ userData.type }})</small></h3>
 
-      <ul>
-         <li>Email: {{ userData.email }}</li>
-         <li>Email: {{ userData.email }}</li>
-      </ul>
-   </div>
+        <ul>
+            <li>Email: {{ userData.email }}</li>
+            <li>Email: {{ userData.email }}</li>
+        </ul>
+    </div>
 
-   <!-- List of user playlists if any -->
-   <div class="profile-videos">
-      <h3>My playlists</h3>
-      {% include('includes/getPlaylists.html') %}
-   </div>
+    <!-- List of user playlists if any || only for admins and teachers -->
 
-   <div class="profile-videos">
-      <h3>My videos</h3>
-      {% include('includes/getVideos.html') %}
-   </div>
+    {% if userData.type == 'teacher' or userData.type == 'admin' %}
+        <div class="profile-pl">
+            <h4>My playlists</h4>
 
+            <form action="profile.php" method="post">
+                <label for="new-playlist-title">Create new playlist</label>
+                <input type="text" id="new-playlist-title" name="new-playlist-title" placeholder="Playlist name">
+                <button class="btn" type="submit" name="new-playlist-submit">Create</button>
+            </form>
+            {% include('includes/response.html') %}
+
+            {% if playlists.status != 'Error' %}
+                <div class="playlist-grid">
+
+                    {% for playlist in playlists %}
+                        <div class="playlist-card">
+                            <div>
+                                <a href="playlist.php?id={{ playlist.id }}">
+                                    <h3>{{ playlist.title }}</h3>
+                                    <img class="thumbnail" src="{{ playlist.thumbnail }}" alt="{{ playlist.title }}">
+                                </a>
+                            </div>
+                            <div>
+                                <small>Videos: {{ playlist.tot_videos }}</small>
+                                <small>Created by: {{ playlist.uname }}</small>
+                                <small>@ {{ playlist.time_created }}</small> 
+                                <p>{{ playlist.subject }}</p>
+                            </div>
+                            <p>{{ playlist.description }}</p>
+                            <!-- Delete playlist button -->
+                            {% if playlist.uid == userData.uid or userData.type == 'admin' %}
+                                <form action="profile.php" method="post">
+                                    <input type="hidden" name="playlist-id" value="{{ playlist.id }}">
+                                    <button class="btn" type="submit" name="delete-playlist-submit">Delete playlist</button>
+                                </form>
+                            {% endif %}
+
+                        </div> 
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+                <p class="error">{{ playlists.error }}</p>
+            {% endif %}
+
+        </div>
+
+        <h4>My videos</h4>
+        
+        {% if videos.status != 'Error' %}
+            <div class="video-grid">
+
+                {% for video in videos %}
+                    <div class="video-card">
+                        <a href="video.php?id={{ video.id }}"><h3>{{ video.title }}</h3></a>
+                        <p>{{ video.subject }}</p>
+                        <a href="video.php?id={{ video.id }}">
+                            <img class="thumbnail" src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                        </a>
+                        <small>Uploaded by: {{ video.name }}</small>
+                        <small>{{ video.upload_time }}</small>
+                    </div> 
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+            <p class="error">{{ videos.error }}</p>
+        {% endif %}
+
+    {% endif %}
+    <!-- Favorites available for all user types -->
+    <h4>My likes</h4>
+    
+    {% if videos.status != 'Error' %}
+        <div class="video-grid">
+
+            {% for video in videos %}
+                <div class="video-card">
+                    <a href="video.php?id={{ video.id }}"><h3>{{ video.title }}</h3></a>
+                    <p>{{ video.subject }}</p>
+                    <a href="video.php?id={{ video.id }}">
+                        <img class="thumbnail" src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                    </a>
+                    <small>Uploaded by: {{ video.name }}</small>
+                    <small>{{ video.upload_time }}</small>
+                </div> 
+            {% endfor %}
+            
+        </div>
+
+    {% else %}
+        <p class="error">{{ videos.error }}</p>
+    {% endif %}
    
 </main>
 

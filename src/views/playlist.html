@@ -16,7 +16,23 @@
         <h3>Description</h3>
         <p>{{ playlist.description }}</p>
     </div>
+    <!-- edit description -->
+    {% if playlist.created_by == userData.uid or userData.type == 'admin' %}
+    <form action="playlist.php?id={{ playlist.id }}" method="Post">
 
+        <button class="btn" type="submit" name="go-to-edit-description-submit">
+            {% if playlist.description == 'No description..' %}
+                Add description
+            {% else %}
+                Edit description
+            {% endif %}
+        </button>
+
+    </form>
+    {% endif %}
+
+    <!-- Videos in playlist -->
+    {% if playlist_videos.status != 'Error' %}
     <div class="video-grid">
 
         {% for video in playlist_videos %}
@@ -31,8 +47,12 @@
                 <p class="rating">Rating: {{ video.rating }}</p>
             </div>
         {% endfor %}
-        
+    
     </div>
+    
+    {% else %}
+        <p class="error">{{ playlist_videos.error }}</p>
+    {% endif %}
 </main>
 
 {% endblock %}

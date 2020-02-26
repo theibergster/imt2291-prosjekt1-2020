@@ -16,6 +16,14 @@ $db = DB::getDBConnection();
 $user = new User($db);
 $playlist = new Playlist($db);
 
+// edit playlist description
+if (isset($_POST['edit-description-submit'])) {
+    $desc['desc'] = $_POST['new-description'];
+    $desc['pid'] = $_POST['description-pid'];
+
+    $playlist->editPlaylistDescription($desc);
+}
+
 
 // Render
 if ($user->loggedIn()) {
@@ -29,7 +37,16 @@ if ($user->loggedIn()) {
         'search_page' => 'playlists',
     ];
 
-    echo $twig->render('playlist.html', $data);
+    // Edit playlist description
+    if (isset($_POST['go-to-edit-description-submit'])) {
+        $data['description'] = [
+            'data' => 'data',
+        ];
+        echo $twig->render('editPlaylistDescription.html', $data);
+    } else {
+
+        echo $twig->render('playlist.html', $data);
+    }
 } else {
     header('Location: index.php?loggedIn=false');
 }

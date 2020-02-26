@@ -18,6 +18,15 @@ $user = new User($db);
 $playlist = new Playlist($db);
 $video = new Video($db);
 
+// Create new playlist
+if (isset($_POST['new-playlist-submit'])) {
+    $response = $playlist->createPlaylist($_POST['new-playlist-title']);
+}
+
+// Delete playlist
+if (isset($_POST['delete-playlist-submit'])) {
+    $playlist->deletePlaylist($_POST['playlist-id']);
+}
 
 if ($user->loggedIn()) {
     $data = [
@@ -27,6 +36,8 @@ if ($user->loggedIn()) {
         'search_page' => 'index',
         'playlists' => $playlist->getPlaylists(array('user' => $_SESSION['uid'], 'limit' => '30')),
         'videos' => $video->getvideos(array('user' => $_SESSION['uid'], 'limit' => '50')),
+        'likes' => 'videis->getLikes()', // TODO:
+        'response' => $response,
     ];
 
     echo $twig->render('profile/profilePage.html', $data);

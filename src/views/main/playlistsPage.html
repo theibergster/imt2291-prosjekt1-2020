@@ -8,7 +8,39 @@
         {% include('includes/search.html') %}
     </div>
 
-    {% include('includes/getPlaylists.html') %}
+    {% if playlists.status != 'Error' %}
+        <div class="playlist-grid">
+
+            {% for playlist in playlists %}
+                <div class="playlist-card">
+                    <div>
+                        <a href="playlist.php?id={{ playlist.id }}">
+                            <h3>{{ playlist.title }}</h3>
+                            <img class="thumbnail" src="{{ playlist.thumbnail }}" alt="{{ playlist.title }}">
+                        </a>
+                    </div>
+                    <div>
+                        <small>Videos: {{ playlist.tot_videos }}</small>
+                        <small>Created by: {{ playlist.uname }}</small>
+                        <small>@ {{ playlist.time_created }}</small> 
+                        <p>{{ playlist.subject }}</p>
+                    </div>
+                    <p>{{ playlist.description }}</p>
+                    <!-- Delete playlist button -->
+                        {% if userData.type == 'admin' %}
+                            <form action="playlists.php" method="post">
+                                <input type="hidden" name="playlist-id" value="{{ playlist.id }}">
+                                <button class="btn" type="submit" name="delete-playlist-submit">Delete playlist</button>
+                            </form>
+                        {% endif %}
+                </div> 
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+        <p class="error">{{ playlists.error }}</p>
+    {% endif %}
 
 </main>
 

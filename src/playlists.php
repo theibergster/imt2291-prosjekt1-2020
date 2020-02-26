@@ -20,9 +20,14 @@ $search = new Search($db);
 
 // Search
 if (isset($_POST['search-submit']) && !empty($_POST['search-query'])) {
-    $playlist = $search->playlistSearch($_POST['search-query']);
+    $getPlaylist = $search->playlistSearch($_POST['search-query']);
 } else {
-    $playlist = $playlist->getPlaylists(array('user' => 'all', 'limit' => '30'));
+    $getPlaylist = $playlist->getPlaylists(array('user' => 'all', 'limit' => '30'));
+}
+
+// Delete playlist
+if (isset($_POST['delete-playlist-submit'])) {
+    $playlist->deletePlaylist($_POST['playlist-id']);
 }
 
 // Render
@@ -32,7 +37,7 @@ if ($user->loggedIn()) {
         'loggedIn' => true,
         'userData' => $_SESSION,
         'get' => $_GET,
-        'playlists' => $playlist,
+        'playlists' => $getPlaylist,
         'search_page' => 'playlists',
     ];
 

@@ -36,7 +36,7 @@ CREATE TABLE `comments` (
 CREATE TABLE `playlists` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(128) NOT NULL,
-  `description` varchar(512),
+  `description` varchar(512) DEFAULT 'No description..',
   `thumbnail` longblob,
   `created_by` bigint(20) NOT NULL,
   `time_created` timestamp NOT NULL,
