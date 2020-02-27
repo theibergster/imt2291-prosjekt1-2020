@@ -7,6 +7,7 @@ require_once 'classes/DB.php';
 require_once 'classes/User.php';
 require_once 'classes/video.php';
 require_once 'classes/Rating.php';
+require_once 'classes/Playlist.php';
 
 $loader = new \Twig\Loader\FilesystemLoader('./views');
 $twig = new \Twig\Environment($loader, [
@@ -17,6 +18,7 @@ $db = DB::getDBConnection();
 $user = new User($db);
 $video = new Video($db);
 $rating = new Rating($db);
+$playlist = new Playlist($db);
 
 // Rate video
 if (isset($_POST['rate-submit'])) {
@@ -25,7 +27,7 @@ if (isset($_POST['rate-submit'])) {
 
 // Like / Dislike video
 if (isset($_POST['like-submit'])) {
-    $asd = $rating->likeVideo($_GET['id']);
+    $rating->likeVideo($_GET['id']);
 } elseif (isset($_POST['dislike-submit'])) {
     $rating->dislikeVideo($_GET['id']);
 }
@@ -42,6 +44,13 @@ if (isset($_POST['delete-comment-submit'])) {
     $commentData['time'] = $_POST['comment-time'];
     $video->deleteComment($commentData);
 } 
+
+// Add video to playlist
+if (isset($_POST['add-to-playlist-submit'])) {
+    $addToPlaylistData['vid'] = $_POST['video-id'];
+    $addToPlaylistData['pid'] = $_POST['playlist-id'];
+    $playlist->addToPlaylist($addToPlaylistData);
+}
 
 // Render
 if ($user->loggedIn()) {
@@ -60,7 +69,7 @@ if ($user->loggedIn()) {
             'check_user' => $rating->checkLike($_GET['id']),
             'get_total' => $rating->getTotalLikes($_GET['id']),
         ],
-        
+        'playlists' => $playlist->getPlaylists(array('user' => $_SESSION['uid'], 'limit' => '100')),
         'comments' => $video->getComments($_GET['id']),
         'search_page' => 'index',
     ];

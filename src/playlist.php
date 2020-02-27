@@ -20,8 +20,14 @@ $playlist = new Playlist($db);
 if (isset($_POST['edit-description-submit'])) {
     $desc['desc'] = $_POST['new-description'];
     $desc['pid'] = $_POST['description-pid'];
-
     $playlist->editPlaylistDescription($desc);
+}
+
+// remove video from playlist
+if (isset($_POST['remove-from-playlist-submit'])) {
+    $removeData['pid'] = $_POST['playlist-id'];
+    $removeData['vid'] = $_POST['video-id'];
+    $playlist->removeFromPlaylist($removeData);
 }
 
 

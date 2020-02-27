@@ -15,40 +15,47 @@
     <div class="description">
         <h3>Description</h3>
         <p>{{ playlist.description }}</p>
+
+        <!-- edit description -->
+        {% if playlist.created_by == userData.uid or userData.type == 'admin' %}
+            <form action="playlist.php?id={{ playlist.id }}" method="Post">
+                <button class="btn" type="submit" name="go-to-edit-description-submit">
+                    {% if playlist.description == 'No description..' %}
+                        Add description
+                    {% else %}
+                        Edit description
+                    {% endif %}
+                </button>
+            </form>
+        {% endif %}
     </div>
-    <!-- edit description -->
-    {% if playlist.created_by == userData.uid or userData.type == 'admin' %}
-    <form action="playlist.php?id={{ playlist.id }}" method="Post">
-
-        <button class="btn" type="submit" name="go-to-edit-description-submit">
-            {% if playlist.description == 'No description..' %}
-                Add description
-            {% else %}
-                Edit description
-            {% endif %}
-        </button>
-
-    </form>
-    {% endif %}
+    
 
     <!-- Videos in playlist -->
     {% if playlist_videos.status != 'Error' %}
-    <div class="video-grid">
+        <div class="video-grid">
 
-        {% for video in playlist_videos %}
-            <div class="video-card">
-                <a href="video.php?id={{ video.id }}"><h3>{{ video.title }}</h3></a>
-                    <p>{{ video.subject }}</p>
-                <a href="video.php?id={{ video.id }}">
-                    <img class="thumbnail" src="{{ video.thumbnail }}" alt="{{ video.title }}">
-                </a>
-                <small>Uploaded by: {{ video.name }}</small>
-                <small>{{ video.upload_time }}</small>
-                <p class="rating">Rating: {{ video.rating }}</p>
-            </div>
-        {% endfor %}
-    
-    </div>
+            {% for video in playlist_videos %}
+                <div class="video-card">
+                    <a href="video.php?id={{ video.id }}"><h3>{{ video.title }}</h3></a>
+                        <p>{{ video.subject }}</p>
+                    <a href="video.php?id={{ video.id }}">
+                        <img class="thumbnail" src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                    </a>
+                    <small>Uploaded by: {{ video.name }}</small>
+                    <small>{{ video.upload_time }}</small>
+                    <p class="rating">Rating: {{ video.rating }}</p>
+                    {% if playlist.created_by == userData.uid %}
+                        <form action="playlist.php?id={{ playlist.id }}" method="post">
+                            <input type="hidden" name="playlist-id" value="{{ playlist.id }}">
+                            <input type="hidden" name="video-id" value="{{ video.id }}">
+                            <button class="btn" type="submit" name="remove-from-playlist-submit">Remove from playlist</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        
+        </div>
     
     {% else %}
         <p class="error">{{ playlist_videos.error }}</p>

@@ -2,15 +2,37 @@
 
 {% block content %}
 
-<main>
+<main class="video-info">
    <div class="main-header">
-        <h2>{{ video.title }}</h2>
-        {% include('includes/search.html') %}
-    </div>
-    <div class="video-top-section">
-        <div class="video-header">
+       <div class="video-header">
+            <h2>{{ video.title }}</h2>
             <small>Uploaded by: {{ video.name }} @ {{ video.upload_time }}</small>
         </div>
+        {% include('includes/search.html') %}
+    </div>
+
+    <!-- Add to playlist -->
+    {% if video.uid == userData.uid %}
+        <div class="video-add-playlist">
+            {% if playlists.status != 'Error' %}
+                <form action="" method="post">
+                    <label for="playlist-id">Add this video a playlist:</label>
+                    <button class="btn" type="submit" name="add-to-playlist-submit">Add</button>
+                    <input type="hidden" name="video-id" value="{{ video.id }}">
+                    <select name="playlist-id" id="playlist-id">
+                        {% for playlist in playlists %}
+                            <option value="{{ playlist.id }}">{{ playlist.title }}</option>
+                        {% endfor %}
+                    </select>
+                </form>        
+            {% else %}
+                <small>Create playlists to sort your videos..</small>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="video-top-section">
+        
         
         <video width="600" controls>
             <source src="{{ video.location }}" type="{{ video.mime }}">
@@ -18,16 +40,16 @@
         <!-- Rating || Rate video -->
     
         <div class="rating">
-            <p>Rate this video</p>
+            <label for="rating-value">Rate this video</label>
             <form action="video.php?id={{ get.id }}" method="post">
-                <select name="rating-value">
+                <button class="btn" type="submit" name="rate-submit">Rate</button>
+                <select name="rating-value" id="rating-value">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
                 </select>
-                <button class="btn" type="submit" name="rate-submit">Rate</button>
             </form>
             <p>Avg rating: {{ rating.total.avg_rating }} of {{ rating.total.tot_users_rate }} users</p>
             <p>Your rating: {{ rating.user.user_rating }}</p>

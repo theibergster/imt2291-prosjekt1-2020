@@ -142,10 +142,40 @@ class Playlist {
     }
 
     public function addToPlaylist($data) {
-        $sql = 'INSERT INTO playlists_videos (playlist_id, video_id)
-                VALUES (:playlist, :video)';
+        $sql = 'INSERT INTO playlist_videos (playlist_id, video_id)
+                VALUES (:pid, :vid)';
         
+        $sth = $this->db->prepare($sql);
+        $sth->bindParam(':pid', $data['pid']);
+        $sth->bindParam(':vid', $data['vid']);
+        $sth->execute();
 
+        if ($sth->rowCount() == 1) {
+            $tmp['status'] = 'Success';
+        } else {
+            $tmp['status'] = 'Error';
+        }
+
+        return $tmp;
+    }
+
+    public function removeFromPlaylist($data) {
+        $sql = 'DELETE FROM playlist_videos
+                WHERE video_id = :vid
+                AND playlist_id = :pid';
+
+        $sth = $this->db->prepare($sql);
+        $sth->bindParam(':pid', $data['pid']);
+        $sth->bindParam(':vid', $data['vid']);
+        $sth->execute();
+
+        if ($sth->rowCount() == 1) {
+            $tmp['status'] = 'Success';
+        } else {
+            $tmp['status'] = 'Error';
+        }
+
+        return $tmp;
     }
 
     public function getVideosInPlaylist($pid) {

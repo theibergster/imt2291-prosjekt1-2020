@@ -21,15 +21,15 @@ class Video {
     public function getVideos($data) {
         if ($data['user'] == 'all') {
             $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid
-                FROM videos
-                LEFT JOIN users ON videos.uploaded_by = users.id
-                ORDER BY videos.upload_time DESC LIMIT ' . $data['limit'];
+                    FROM videos
+                    LEFT JOIN users ON videos.uploaded_by = users.id
+                    ORDER BY videos.upload_time DESC LIMIT ' . $data['limit'];
         } else {
-            $sql = 'SELECT videos.*, users.name, users.email
-                FROM users
-                RIGHT JOIN videos ON users.id = videos.uploaded_by
-                WHERE users.id = ?
-                ORDER BY videos.upload_time DESC LIMIT ' . $data['limit'];
+            $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid
+                    FROM videos
+                    LEFT JOIN users ON videos.uploaded_by = users.id
+                    WHERE users.id = ?
+                    ORDER BY videos.upload_time DESC LIMIT ' . $data['limit'];
         }
 
         $sth = $this->db->prepare($sql);
