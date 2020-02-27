@@ -12,7 +12,7 @@
     </div>
 
     <!-- Add to playlist -->
-    {% if video.uid == userData.uid %}
+    {% if video.uid == userData.uid and userData != 'student' %}
         <div class="video-add-playlist">
             {% if playlists.status != 'Error' %}
                 <form action="" method="post">

@@ -83,7 +83,7 @@ header {
   padding: .5rem 1rem;
   height: 5rem;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   justify-content: space-around;
 }

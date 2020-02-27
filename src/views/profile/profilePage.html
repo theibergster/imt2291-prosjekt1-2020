@@ -96,20 +96,20 @@
     <!-- Favorites available for all user types -->
     <h4>My likes</h4>
     
-    {% if videos.status != 'Error' %}
+    {% if likes.status != 'Error' %}
         <div class="video-grid">
 
-            {% for video in videos %}
+            {% for liked in likes %}
                 <div class="video-card">
-                    <a href="video.php?id={{ video.id }}"><h3>{{ video.title }}</h3></a>
-                    <p>{{ video.subject }}</p>
-                    <a href="video.php?id={{ video.id }}">
-                        <img class="thumbnail" src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                    <a href="video.php?id={{ liked.id }}"><h3>{{ liked.title }}</h3></a>
+                    <p>{{ liked.subject }}</p>
+                    <a href="video.php?id={{ liked.id }}">
+                        <img class="thumbnail" src="{{ liked.thumbnail }}" alt="{{ liked.title }}">
                     </a>
-                    <small>Uploaded by: {{ video.name }}</small>
-                    <small>{{ video.upload_time }}</small>
-                    {% if video.avg_rating %}
-                        <small>Rating: {{ video.avg_rating }}</small>
+                    <small>Uploaded by: {{ liked.name }}</small>
+                    <small>{{ liked.upload_time }}</small>
+                    {% if liked.avg_rating %}
+                        <small>Rating: {{ liked.avg_rating }}</small>
                     {% else %}
                         <small>Rating: Not rated</small>
                     {% endif %}

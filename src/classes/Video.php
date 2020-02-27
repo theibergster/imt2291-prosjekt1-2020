@@ -48,6 +48,28 @@ class Video {
         return $tmp;
     }
 
+    public function getLikedVideos($data) {
+
+        $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid
+                FROM videos
+                RIGHT JOIN rating ON videos.id = rating.video_id
+                INNER JOIN users ON rating.user_id = users.id
+                WHERE users.id = ?
+                AND rating.liked = 1 
+                ORDER BY videos.uploaded_by LIMIT ' . $data['limit'];
+
+        $sth = $this->db->prepare($sql);
+        $sth->execute(array($data['user']));
+
+        if ($row = $sth->fetchAll(PDO::FETCH_ASSOC)) {
+            return $row;
+        } else {
+            $tmp['status'] = 'Error';
+            $tmp['error'] = 'No videos found..';
+        }
+        return $tmp;
+    }
+
     /**
      * Method for getting info on single video
      */

@@ -35,8 +35,8 @@ if ($user->loggedIn()) {
         'userData' => $_SESSION,
         'search_page' => 'index',
         'playlists' => $playlist->getPlaylists(array('user' => $_SESSION['uid'], 'limit' => '30')),
-        'videos' => $video->getvideos(array('user' => $_SESSION['uid'], 'limit' => '50')),
-        'likes' => 'videis->getLikes()', // TODO:
+        'videos' => $video->getVideos(array('user' => $_SESSION['uid'], 'limit' => '50')),
+        'likes' => $video->getLikedVideos(array('user' => $_SESSION['uid'], 'limit' => '50')),
         'response' => $response,
     ];
 
