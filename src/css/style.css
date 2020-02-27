@@ -189,13 +189,13 @@ main {
   color: #333;
   background: white;
   max-width: 360px;
-  height: 360px;
+  height: 400px;
   border-radius: 3px;
   box-shadow: 2px 2px 7px rgba(0, 0, 0, .1);
 }
 
 .thumbnail {
-  max-width: 300px;
+  max-width: 360px;
 }
 
 /*** Videos Info Page ***/

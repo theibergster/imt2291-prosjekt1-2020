@@ -20,15 +20,19 @@ class Video {
      */
     public function getVideos($data) {
         if ($data['user'] == 'all') {
-            $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid
+            $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid, FORMAT(AVG(rating.rating), 1) as avg_rating
                     FROM videos
-                    LEFT JOIN users ON videos.uploaded_by = users.id
+                    LEFT JOIN rating ON videos.id = rating.video_id
+                    INNER JOIN users ON videos.uploaded_by = users.id
+                    GROUP BY videos.id
                     ORDER BY videos.upload_time DESC LIMIT ' . $data['limit'];
         } else {
-            $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid
+            $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid, FORMAT(AVG(rating.rating), 1) as avg_rating
                     FROM videos
-                    LEFT JOIN users ON videos.uploaded_by = users.id
+                    LEFT JOIN rating ON videos.id = rating.video_id
+                    INNER JOIN users ON videos.uploaded_by = users.id
                     WHERE users.id = ?
+                    GROUP BY videos.id
                     ORDER BY videos.upload_time DESC LIMIT ' . $data['limit'];
         }
 
@@ -51,9 +55,9 @@ class Video {
         $id = htmlspecialchars($video);
 
         $sql = 'SELECT videos.*, users.name, users.id AS uid
-            FROM videos
-            LEFT JOIN users ON videos.uploaded_by = users.id
-            WHERE videos.id = ?';
+                FROM videos
+                LEFT JOIN users ON videos.uploaded_by = users.id
+                WHERE videos.id = ?';
 
         $sth = $this->db->prepare($sql);
         $sth->execute(array($id));

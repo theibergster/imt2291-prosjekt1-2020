@@ -78,6 +78,11 @@
                         </a>
                         <small>Uploaded by: {{ video.name }}</small>
                         <small>{{ video.upload_time }}</small>
+                        {% if video.avg_rating %}
+                            <small>Rating: {{ video.avg_rating }}</small>
+                        {% else %}
+                            <small>Rating: Not rated</small>
+                        {% endif %}
                     </div> 
                 {% endfor %}
 
@@ -103,6 +108,11 @@
                     </a>
                     <small>Uploaded by: {{ video.name }}</small>
                     <small>{{ video.upload_time }}</small>
+                    {% if video.avg_rating %}
+                        <small>Rating: {{ video.avg_rating }}</small>
+                    {% else %}
+                        <small>Rating: Not rated</small>
+                    {% endif %}
                 </div> 
             {% endfor %}
             

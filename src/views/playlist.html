@@ -44,7 +44,7 @@
                     </a>
                     <small>Uploaded by: {{ video.name }}</small>
                     <small>{{ video.upload_time }}</small>
-                    <p class="rating">Rating: {{ video.rating }}</p>
+                    <small>Rating: {{ video.rating }}</small>
                     {% if playlist.created_by == userData.uid %}
                         <form action="playlist.php?id={{ playlist.id }}" method="post">
                             <input type="hidden" name="playlist-id" value="{{ playlist.id }}">
