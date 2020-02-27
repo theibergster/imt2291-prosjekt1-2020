@@ -9,15 +9,17 @@
 </head>
     <body>
         <header>
-            <h1 class="logo">Webbusito</h1>
+            <h1 class="logo">prosjekt_1</h1>
             
             {% if loggedIn %}
                 <nav>
                     <ul>
                         <li><a href="index.php">Videos</a></li>
                         <li><a href="playlists.php">Playlists</a></li>
-                        <li><a href="#">My Subscriptions</a></li>
-                        <li><a href="uploadvideo.php">Upload</a></li>
+                        <li><a href="subscriptions.php">My Subscriptions</a></li>
+                        {% if userData.type == 'teacher' or userData.type == 'admin' %}
+                            <li><a href="uploadvideo.php">Upload</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
         

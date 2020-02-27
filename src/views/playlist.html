@@ -4,7 +4,25 @@
 
 <main>
    <div class="main-header">
-        <h2>{{ playlist.title }}</h2>
+        <div class="title-n-button">
+            <h2>{{ playlist.title }}</h2>
+
+            <!-- Subscribe button -->
+            {% if playlist.sub_uid != userData.uid %} 
+                <form action="playlist.php?id={{ playlist.id }}" method="post">
+                    <input type="hidden" name="sub-playlist-id" value="{{ playlist.id }}">
+                    <button class="btn" type="submit" name="subscribe-submit">Subscribe</button>
+                </form>
+            {% else %}
+                <small>— You are subscribed</small>
+                <form action="playlist.php?id={{ playlist.id }}" method="post">
+                    <input type="hidden" name="sub-playlist-id" value="{{ playlist.id }}">
+                    <button class="btn" type="submit" name="unsubscribe-submit">Unsubscribe</button>
+                </form>
+            {% endif %}
+
+        </div>
+        
         {% include('includes/search.html') %}
     </div>
 
@@ -13,21 +31,25 @@
     </div>
     
     <div class="description">
-        <h3>Description</h3>
+        <div class="title-n-button">
+            <h3>Description</h3>
+
+            <!-- edit description -->
+            {% if playlist.created_by == userData.uid or userData.type == 'admin' %}
+                <form action="playlist.php?id={{ playlist.id }}" method="Post">
+                    <button class="btn" type="submit" name="go-to-edit-description-submit">
+                        {% if playlist.description == 'No description..' %}
+                            Add description
+                        {% else %}
+                            Edit description
+                        {% endif %}
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+
         <p>{{ playlist.description }}</p>
 
-        <!-- edit description -->
-        {% if playlist.created_by == userData.uid or userData.type == 'admin' %}
-            <form action="playlist.php?id={{ playlist.id }}" method="Post">
-                <button class="btn" type="submit" name="go-to-edit-description-submit">
-                    {% if playlist.description == 'No description..' %}
-                        Add description
-                    {% else %}
-                        Edit description
-                    {% endif %}
-                </button>
-            </form>
-        {% endif %}
     </div>
     
 

@@ -45,8 +45,9 @@ class Playlist {
     public function getPlaylistInfo($vid) {
         $id = htmlspecialchars($vid);
 
-        $sql = 'SELECT playlists.*, users.id AS uid, users.name AS uname
+        $sql = 'SELECT playlists.*, users.id AS uid, users.name AS uname, subscriptions.playlist_id AS sub_pid, subscriptions.user_id AS sub_uid
                 FROM playlists
+                LEFT JOIN subscriptions ON playlists.id = subscriptions.playlist_id
                 LEFT JOIN users ON playlists.created_by = users.id
                 WHERE playlists.id = ?';
 

@@ -20,15 +20,18 @@ if (isset($_POST['file-submit'])) {
     $response = $video->uploadVideo();
 }
 
-if ($user->loggedIn()) {
-    $data = [
-        'title' => 'Videos',
-        'loggedIn' => true,
-        'response' => $response,
-        'userData' => $_SESSION
-    ];
-    
-    echo $twig->render('main/uploadVideo.html', $data);
+if ($user->loggedIn()) {  
+    if ($_SESSION['type'] != 'student') {
+        $data = [
+            'title' => 'Videos',
+            'loggedIn' => true,
+            'response' => $response,
+            'userData' => $_SESSION
+        ];
+        echo $twig->render('main/uploadVideo.html', $data);
+    } else {
+        header('Location: signup.php?type=false');
+    }
 } else {
     header('Location: signup.php?loggedIn=false');
 }

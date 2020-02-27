@@ -6,6 +6,7 @@ require_once '../../vendor/autoload.php';
 require_once 'classes/DB.php';
 require_once 'classes/User.php';
 require_once 'classes/Playlist.php';
+require_once 'classes/Subscription.php';
 
 $loader = new \Twig\Loader\FilesystemLoader('./views');
 $twig = new \Twig\Environment($loader, [
@@ -15,12 +16,14 @@ $twig = new \Twig\Environment($loader, [
 $db = DB::getDBConnection();
 $user = new User($db);
 $playlist = new Playlist($db);
+$subscription = new Subscription($db);
 
 // edit playlist description
 if (isset($_POST['edit-description-submit'])) {
-    $desc['desc'] = $_POST['new-description'];
-    $desc['pid'] = $_POST['description-pid'];
-    $playlist->editPlaylistDescription($desc);
+    $playlist->editPlaylistDescription(array(
+        'desc' => $_POST['new-description'],
+        'pid' => $_POST['description-pid']
+    ));
 }
 
 // remove video from playlist
@@ -30,6 +33,18 @@ if (isset($_POST['remove-from-playlist-submit'])) {
     $playlist->removeFromPlaylist($removeData);
 }
 
+// Subscribe / unsubscribe to playlist
+if (isset($_POST['subscribe-submit'])) {
+    $subscription->subscribe(array(
+        'pid' => $_POST['sub-playlist-id'],
+        'uid' => $_SESSION['uid']
+    ));
+} elseif (isset($_POST['unsubscribe-submit'])) {
+    $subscription->unsubscribe(array(
+        'pid' => $_POST['sub-playlist-id'],
+        'uid' => $_SESSION['uid']
+    ));
+}
 
 // Render
 if ($user->loggedIn()) {
