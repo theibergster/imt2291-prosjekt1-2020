@@ -22,7 +22,10 @@ $playlist = new Playlist($db);
 
 // Rate video
 if (isset($_POST['rate-submit'])) {
-    $rating->rateVideo($_GET['id']);
+    $rating->rateVideo(array(
+        'vid' => $_GET['id'],
+        'rating-value' => $_POST['rating-value']
+    ));
 }
 
 // Like / Dislike video
@@ -39,17 +42,19 @@ if (isset($_POST['comment-submit'])) {
 
 // Delete comment
 if (isset($_POST['delete-comment-submit'])) {
-    $commentData['cid'] = $_POST['comment-uid'];
-    $commentData['vid'] = $_POST['comment-vid'];
-    $commentData['time'] = $_POST['comment-time'];
-    $video->deleteComment($commentData);
+    $video->deleteComment(array(
+        'uid' => $_POST['comment-uid'],
+        'vid' => $_POST['comment-vid'],
+        'time' => $_POST['comment-time']
+    ));
 } 
 
 // Add video to playlist
 if (isset($_POST['add-to-playlist-submit'])) {
-    $addToPlaylistData['vid'] = $_POST['video-id'];
-    $addToPlaylistData['pid'] = $_POST['playlist-id'];
-    $playlist->addToPlaylist($addToPlaylistData);
+    $playlist->addToPlaylist(array(
+        'vid' => $_POST['video-id'],
+        'pid' => $_POST['playlist-id']
+    ));
 }
 
 // Render

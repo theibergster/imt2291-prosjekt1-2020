@@ -22,6 +22,7 @@ $subscription = new Subscription($db);
 
 // Search -> subscriptionSearch
 if (isset($_POST['search-submit']) && !empty($_POST['search-query'])) {
+    // TODO: fix search
     $getSubscriptions = $search->playlistSearch($_POST['search-query']);
 } else {
     // subscriptions -> getSubscriptions

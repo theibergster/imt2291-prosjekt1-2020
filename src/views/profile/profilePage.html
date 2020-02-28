@@ -93,7 +93,40 @@
         {% endif %}
 
     {% endif %}
-    <!-- Favorites available for all user types -->
+    <!-- 'Subscriptions' — available for all user types -->
+    <h4>My subscriptions</h4>
+
+    {% if subscriptions.status != 'Error' %}
+        <div class="playlist-grid">
+
+            {% for sub in subscriptions %}
+                <div class="playlist-card">
+                    <div>
+                        <a href="playlist.php?id={{ sub.id }}">
+                            <h3>{{ sub.title }}</h3>
+                            <img class="thumbnail" src="{{ sub.thumbnail }}" alt="{{ sub.title }}">
+                        </a>
+                    </div>
+                    <div>
+                        <small>Videos: {{ sub.tot_videos }}</small>
+                        <small>Created by: {{ sub.uname }}</small>
+                        <small>@ {{ sub.time_created }}</small> 
+                        <p>{{ sub.subject }}</p>
+                    </div>
+                    <p>{{ sub.description }}</p>
+                    
+                </div> 
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+        <p class="error">{{ subscriptions.error }}</p>
+    {% endif %}
+
+
+
+    <!-- 'My likes' — available for all user types -->
     <h4>My likes</h4>
     
     {% if likes.status != 'Error' %}

@@ -30,7 +30,7 @@ if ($user->loggedIn()) {
         ];
         echo $twig->render('main/uploadVideo.html', $data);
     } else {
-        header('Location: signup.php?type=false');
+        header('Location: signup.php?access=false');
     }
 } else {
     header('Location: signup.php?loggedIn=false');

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Create New User</title>
+</head>
+    <body>
+        <header>
+            <h1 class="logo">prosjekt_1</h1>
+            
+                            <p class="header-text">Please log in or create a new user</p>
+                <div class="header-login">
+                    <form action="index.php" method="post">
+                        <input type="email" name="email" placeholder="Email" value="">
+                        <input type="password" name="pwd" placeholder="Password">
+                        <button class="btn" type="submit" name="login-submit">Log in</button>
+                    </form>
+                </div>
+            
+        </header>
+
+        <div class="content">
+            
+<main class="signup-page">
+    <h2 class="page-heading">Sign up</h2>
+    <form class="signup-form" action="signup.php" method="POST">
+        <input type="text" name="name" placeholder="Name" />
+        <input type="email" name="email" placeholder="Email" />
+        <input type="password" name="pwd" placeholder="Password" />
+        <input type="password" name="pwd-repeat" placeholder="Repeat Password" />
+        <label for="type">I am a:</label>
+        <select name="user-type" id="type">
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+        </select>
+
+        <button class="btn" type="submit" name="signup-submit">Sign up!</button>
+    </form>
+
+        
+</main>
+
+        </div>
+        
+    </body>
+</html>

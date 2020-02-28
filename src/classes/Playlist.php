@@ -1,14 +1,17 @@
 <?php
 /**
- * Playlist class
+ * Playlist class for handling everything related to playlists.
  */
 class Playlist {
     private $db;
-
     public function __construct($db) {
         $this->db = $db;
     }
-
+    /**
+     * Function for returning all playlist data from db.
+     * @param {array} — assoc array with user being either 'all' or uid of current user.
+     * @return {array} — assoc array with rows from db, or an error message if no rows are returned.
+     */
     public function getPlaylists($data) {
         if ($data['user'] == 'all') {
             $sql = 'SELECT playlists.*, COUNT(playlist_videos.video_id) AS tot_videos, users.id AS uid, users.name AS uname
@@ -40,10 +43,12 @@ class Playlist {
     }
 
     /**
-     * Method for getting info on single playlist
+     * Returns info on one single playlist.
+     * @param {string} — the playlist id.
+     * @return {array} — assoc array with rows from db, or an error message.
      */
-    public function getPlaylistInfo($vid) {
-        $id = htmlspecialchars($vid);
+    public function getPlaylistInfo($pid) {
+        $id = htmlspecialchars($pid);
 
         $sql = 'SELECT playlists.*, users.id AS uid, users.name AS uname, subscriptions.playlist_id AS sub_pid, subscriptions.user_id AS sub_uid
                 FROM playlists
@@ -57,10 +62,15 @@ class Playlist {
         if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             return $row;
         } else {
-            // Something bad TODO:
+            return array('error' => 'error getting playlist info..');
         }
     }
     
+    /**
+     * Function for creating a new playlist.
+     * @param {string} — title of new playlist.
+     * @return {array} — assoc array with status message from db.
+     */
     public function createPlaylist($title) {
         $title = htmlspecialchars($title);
         // $description = htmlspecialchars($_POST['description']);
@@ -85,6 +95,11 @@ class Playlist {
         return $tmp;
     }
 
+    /**
+     * Function for editing the description of a single playlist.
+     * @param {array} — assoc array containing the playlist id, and the new description.
+     * @return {array} — assoc array with status message from db.
+     */
     public function editPlaylistDescription($data) {
         $pid = htmlspecialchars($data['pid']);
         $desc = htmlspecialchars($data['desc']);
@@ -108,6 +123,12 @@ class Playlist {
         return $tmp;
     }
 
+    /**
+     * Function for deleting a playlist.
+     * Deletes the rows connecting the videos and playlist tables from db.
+     * @param {string} — id of playlist to delete.
+     * @return {array} — assoc array with status message.
+     */
     public function deletePlaylist($pid) {
         $sql = 'DELETE FROM playlist_videos
                 WHERE playlist_id = ?';
@@ -126,6 +147,12 @@ class Playlist {
         return $tmp;
     }
 
+    /**
+     * Cleanup function for deleting a playlist. 
+     * Deletes playlist row from playlist table from db.
+     * @param {string} — id of playlist to delete.
+     * @return {array} — assoc array with status message.
+     */
     public function deletePlaylistCleanup($pid) {
         $sql = 'DELETE FROM playlists
                 WHERE id = ?';
@@ -142,6 +169,11 @@ class Playlist {
         return $tmp;
     }
 
+    /**
+     * Function for adding video to playlist.
+     * @param {array} — assoc array containing the playlist id, and video id.
+     * @return {array} — assoc array with status message.
+     */
     public function addToPlaylist($data) {
         $sql = 'INSERT INTO playlist_videos (playlist_id, video_id)
                 VALUES (:pid, :vid)';
@@ -160,6 +192,11 @@ class Playlist {
         return $tmp;
     }
 
+    /**
+     * Function for removing a video from playlist.
+     * @param {array} — assoc array containing the playlist id, and video id.
+     * @return {array} — assoc array with status message.
+     */
     public function removeFromPlaylist($data) {
         $sql = 'DELETE FROM playlist_videos
                 WHERE video_id = :vid
@@ -179,6 +216,11 @@ class Playlist {
         return $tmp;
     }
 
+    /**
+     * Function for returning all videos in a single playlist from db.
+     * @param {string} — playlist id.
+     * @return {array} — assoc array of all rows from db, or an error message if no rows are returned.
+     */
     public function getVideosInPlaylist($pid) {
         $id = htmlspecialchars($pid);
 
@@ -199,5 +241,4 @@ class Playlist {
         }
         return $tmp;
     }
-    
 }

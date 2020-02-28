@@ -16,9 +16,12 @@
                     <ul>
                         <li><a href="index.php">Videos</a></li>
                         <li><a href="playlists.php">Playlists</a></li>
-                        <li><a href="subscriptions.php">My Subscriptions</a></li>
+                        <li><a href="subscriptions.php">Subscriptions</a></li>
                         {% if userData.type == 'teacher' or userData.type == 'admin' %}
                             <li><a href="uploadvideo.php">Upload</a></li>
+                        {% endif %}
+                        {% if userData.type == 'admin' %}
+                            <li><a href="users.php">Users</a></li>
                         {% endif %}
                     </ul>
                 </nav>

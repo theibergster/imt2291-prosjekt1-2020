@@ -1,30 +1,47 @@
 <?php
+/**
+ * Class for handling user login / logout, and user signup.
+ */
 class User {
-    protected $uid = -1;
     protected $db;
-
+    protected $uid = -1;
+    /**
+     * Constructor handling access to db, and login / logout.
+     */
     public function __construct($db) {
         $this->db = $db;
-
+        // Login handler.
         if (isset($_POST['login-submit'])) {
             if (!empty($_POST['email']) || !empty($_POST['pwd'])) {
                 $_SESSION = array();
                 $this->login();
             }
+        // Logout handler
         } else if (isset($_POST['logout-submit'])) {
             $this->uid = -1;
-            $_SESSION = array();
+            session_start();
             session_destroy();
-            header('Location: index.php');
+            session_unset();
+            $_SESSION = array();
+            header('Location: index.php?loggout=success');
         } else if (isset($_SESSION['uid'])) {
             $this->uid = $_SESSION['uid'];
         }
     }
 
+    /**
+     * Function for checking if user is logged in.
+     * @return {bool}
+     */
     public function loggedIn() {
         return $this->uid > -1;
     }
 
+    /**
+     * Function for logging in, and setting session values.
+     * Checks if email exists in db, and if password is correct.
+     * @return {array} assoc array with status.
+     */
     public function login() {
         $email = htmlspecialchars($_POST['email']);
         $pwd = htmlspecialchars($_POST['pwd']);

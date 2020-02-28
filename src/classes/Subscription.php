@@ -67,5 +67,26 @@ class Subscription {
 
         return $tmp;
     }
+    /**
+     * @param {string} — playlist id.
+     */
+    public function subCheck($pid) {
+        $sql = 'SELECT playlist_id, user_id
+                FROM subscriptions
+                WHERE playlist_id = :pid 
+                AND user_id = :uid';
+
+        $sth = $this->db->prepare($sql);
+        $sth->bindParam(':pid', $pid);
+        $sth->bindParam(':uid', $_SESSION['uid']);
+        $sth->execute();
+
+        $row = $sth->fetch(PDO::FETCH_ASSOC);
+        if ($row['playlist_id'] > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

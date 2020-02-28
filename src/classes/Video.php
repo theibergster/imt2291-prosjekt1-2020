@@ -257,7 +257,7 @@ class Video {
     }
 
     public function deleteComment($commentData) {
-        $uid = htmlspecialchars($commentData['cid']);
+        $uid = htmlspecialchars($commentData['uid']);
         $vid = htmlspecialchars($commentData['vid']);
         $time = htmlspecialchars($commentData['time']);
 

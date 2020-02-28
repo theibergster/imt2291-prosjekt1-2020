@@ -7,6 +7,7 @@ require_once 'classes/DB.php';
 require_once 'classes/User.php';
 require_once 'classes/Playlist.php';
 require_once 'classes/video.php';
+require_once 'classes/Subscription.php';
 
 $loader = new \Twig\Loader\FilesystemLoader('./views');
 $twig = new \Twig\Environment($loader, [
@@ -17,6 +18,7 @@ $db = DB::getDBConnection();
 $user = new User($db);
 $playlist = new Playlist($db);
 $video = new Video($db);
+$subscription = new Subscription($db);
 
 // Create new playlist
 if (isset($_POST['new-playlist-submit'])) {
@@ -36,6 +38,7 @@ if ($user->loggedIn()) {
         'search_page' => 'index',
         'playlists' => $playlist->getPlaylists(array('user' => $_SESSION['uid'], 'limit' => '30')),
         'videos' => $video->getVideos(array('user' => $_SESSION['uid'], 'limit' => '50')),
+        'subscriptions' => $subscription->getSubscriptions(array('user' => $_SESSION['uid'], 'limit' => '30')),
         'likes' => $video->getLikedVideos(array('user' => $_SESSION['uid'], 'limit' => '50')),
         'response' => $response,
     ];
