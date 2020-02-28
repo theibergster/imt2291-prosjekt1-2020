@@ -14,13 +14,21 @@ $twig = new \Twig\Environment($loader, [
 $db = DB::getDBConnection();
 $user = new User($db);
 
-$validate_response = $user->validateUserSignup($_POST['name'], $_POST['email'], $_POST['pwd'], $_POST['pwd-repeat']);
-if ($validate_response['status'] == 'Success') {
-    $response = $user->addUser();
-} else {
-    $response = $validate_response;
+// Validate and signup
+if (isset($_POST['signup-submit'])) {
+    $validate_response = $user->validateUserSignup($_POST['name'], $_POST['email'], $_POST['pwd'], $_POST['pwd-repeat']);
+    if ($validate_response['status'] == 'Success') {
+        $response = $user->addUser(array(
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'pwd' => $_POST['pwd'],
+            'type' => $_POST['user-type']));
+    } else {
+        $response = $validate_response;
+    }
 }
 
+// Render
 if ($user->loggedIn()) {
     header('Location: index.php?loggedIn=true');
 } else {

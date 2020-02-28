@@ -1,14 +1,18 @@
 <?php
 /**
- * Subscription class for handling subscriptions
+ * Subscription class for handling subscriptions.
  */
 class Subscription {
     private $db;
-
     public function __construct($db) {
         $this->db = $db;
     }
 
+    /**
+     * Function for getting playlists that the current user is subscribed to.
+     * @param array data — user data.
+     * @return array — all rows return from db, or error message if no rows are returned.
+     */
     public function getSubscriptions($data) {
         $sql = 'SELECT playlists.*, COUNT(playlist_videos.video_id) AS tot_videos, users.id AS uid, users.name AS uname, subscriptions.playlist_id AS sub_pid, subscriptions.user_id AS sub_uid
                 FROM playlists
@@ -31,6 +35,11 @@ class Subscription {
         return $tmp;
     }
 
+    /**
+     * Function for adding a playlist to the current user's subscriptions list.
+     * @param array data — assoc array containing playlist id and user id.
+     * @return array — status message.
+     */
     public function subscribe($data) {        
         $sql = 'INSERT INTO subscriptions (playlist_id, user_id)
                 VALUES (:pid, :uid)';
@@ -49,6 +58,11 @@ class Subscription {
         return $tmp;
     }
 
+    /**
+     * Function for removing a playlist from the current user's subscriptions list.
+     * @param array data — assoc array containing playlist id and user id.
+     * @return array — status message.
+     */
     public function unsubscribe($data) {
         $sql = 'DELETE FROM subscriptions
                 WHERE user_id = :uid
@@ -67,8 +81,11 @@ class Subscription {
 
         return $tmp;
     }
+
     /**
-     * @param {string} — playlist id.
+     * Method for checking if the current user is subscribed to a specific playlist.
+     * @param string pid — playlist id.
+     * @return bool —  true or false.
      */
     public function subCheck($pid) {
         $sql = 'SELECT playlist_id, user_id
@@ -88,5 +105,4 @@ class Subscription {
             return false;
         }
     }
-
 }

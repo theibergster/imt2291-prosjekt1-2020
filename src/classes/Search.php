@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for handling search
+ * Class for handling the search bar.
  */
 class Search {
     private $db;
@@ -9,6 +9,11 @@ class Search {
         $this->db = $db;
     }
 
+    /**
+     * Function responsible for searching through videos.
+     * @param string query — search query.
+     * @return array — rows returned from db, or error message if no rows are returned.
+     */
     public function videoSearch($query) {
         $query = htmlspecialchars("%{$query}%");
 
@@ -36,6 +41,11 @@ class Search {
         return $tmp;
     }
 
+    /**
+     * Function responsible for searching through playlists.
+     * @param string query — search query.
+     * @return array — rows returned from db, or error message if no rows are returned.
+     */
     public function playlistSearch($query) {
         $query = htmlspecialchars("%{$query}%");
 

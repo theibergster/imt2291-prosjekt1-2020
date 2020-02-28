@@ -9,8 +9,8 @@ class Playlist {
     }
     /**
      * Function for returning all playlist data from db.
-     * @param {array} — assoc array with user being either 'all' or uid of current user.
-     * @return {array} — assoc array with rows from db, or an error message if no rows are returned.
+     * @param array data — assoc array with user being either 'all' or uid of current user.
+     * @return array row — assoc array with rows from db, or an error message if no rows are returned.
      */
     public function getPlaylists($data) {
         if ($data['user'] == 'all') {
@@ -44,8 +44,8 @@ class Playlist {
 
     /**
      * Returns info on one single playlist.
-     * @param {string} — the playlist id.
-     * @return {array} — assoc array with rows from db, or an error message.
+     * @param string pid — the playlist id.
+     * @return array row — assoc array with rows from db, or an error message.
      */
     public function getPlaylistInfo($pid) {
         $id = htmlspecialchars($pid);
@@ -68,8 +68,8 @@ class Playlist {
     
     /**
      * Function for creating a new playlist.
-     * @param {string} — title of new playlist.
-     * @return {array} — assoc array with status message from db.
+     * @param string title — title of new playlist.
+     * @return array tmp — assoc array with status message from db.
      */
     public function createPlaylist($title) {
         $title = htmlspecialchars($title);
@@ -97,8 +97,8 @@ class Playlist {
 
     /**
      * Function for editing the description of a single playlist.
-     * @param {array} — assoc array containing the playlist id, and the new description.
-     * @return {array} — assoc array with status message from db.
+     * @param array data — assoc array containing the playlist id, and the new description.
+     * @return array tmp — assoc array with status message from db.
      */
     public function editPlaylistDescription($data) {
         $pid = htmlspecialchars($data['pid']);
@@ -126,8 +126,8 @@ class Playlist {
     /**
      * Function for deleting a playlist.
      * Deletes the rows connecting the videos and playlist tables from db.
-     * @param {string} — id of playlist to delete.
-     * @return {array} — assoc array with status message.
+     * @param string pid — id of playlist to delete.
+     * @return array tmp — assoc array with status message.
      */
     public function deletePlaylist($pid) {
         $sql = 'DELETE FROM playlist_videos
@@ -150,8 +150,8 @@ class Playlist {
     /**
      * Cleanup function for deleting a playlist. 
      * Deletes playlist row from playlist table from db.
-     * @param {string} — id of playlist to delete.
-     * @return {array} — assoc array with status message.
+     * @param string pid— id of playlist to delete.
+     * @return array tmp — assoc array with status message.
      */
     public function deletePlaylistCleanup($pid) {
         $sql = 'DELETE FROM playlists
@@ -171,8 +171,8 @@ class Playlist {
 
     /**
      * Function for adding video to playlist.
-     * @param {array} — assoc array containing the playlist id, and video id.
-     * @return {array} — assoc array with status message.
+     * @param array data — assoc array containing the playlist id, and video id.
+     * @return array tmp — assoc array with status message.
      */
     public function addToPlaylist($data) {
         $sql = 'INSERT INTO playlist_videos (playlist_id, video_id)
@@ -194,8 +194,8 @@ class Playlist {
 
     /**
      * Function for removing a video from playlist.
-     * @param {array} — assoc array containing the playlist id, and video id.
-     * @return {array} — assoc array with status message.
+     * @param array data — assoc array containing the playlist id, and video id.
+     * @return array tmp — assoc array with status message.
      */
     public function removeFromPlaylist($data) {
         $sql = 'DELETE FROM playlist_videos
@@ -218,8 +218,8 @@ class Playlist {
 
     /**
      * Function for returning all videos in a single playlist from db.
-     * @param {string} — playlist id.
-     * @return {array} — assoc array of all rows from db, or an error message if no rows are returned.
+     * @param string pid — playlist id.
+     * @return array tmp — assoc array of all rows from db, or an error message if no rows are returned.
      */
     public function getVideosInPlaylist($pid) {
         $id = htmlspecialchars($pid);

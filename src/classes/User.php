@@ -69,16 +69,21 @@ class User {
         }
     }
 
-    public function addUser() {
+    /**
+     * Function for adding a user when signing up.
+     * @param array data — user data from signup form.
+     * @return array — status message.
+     */
+    public function addUser($data) {
         $sql = 'INSERT INTO users (name, email, password, type) 
                 VALUES (?,?,?,?)';
                 
-        $hashed_pwd = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
+        $data['pwd'] = password_hash($data['pwd'], PASSWORD_DEFAULT);
         $sth = $this->db->prepare($sql);
-        $sth->execute([$_POST['name'], $_POST['email'], $hashed_pwd, $_POST['user-type']]);
+        $sth->execute(array($data['name'], $data['email'], $data['pwd'], $data['type']));
 
         if ($sth->rowCount() == 1) {
-            $tmp['status'] = 'Created user: ' . $_POST['email'];
+            $tmp['status'] = 'Created user: ' . $data['email'];
             $tmp['id'] = $this->db->lastInsertId();
         } else {
             $tmp['status'] = 'Failed';
@@ -92,6 +97,11 @@ class User {
         return $tmp;
     }
 
+    /**
+     * Function for checking if user is a 'student', 'teacher' or 'admin'.
+     * @param string uid — user id.
+     * @return array — row returned from db, or error message.
+     */
     public function checkUserType($uid) {
         $uid = htmlspecialchars($uid);
 
@@ -109,18 +119,24 @@ class User {
         }
     }
 
+    /**
+     * Function for validating user data from the signup form.
+     * @param string name — user name.
+     * @param string email — user email.
+     * @param string pwd — user password.
+     * @param string pwd-repeat — repeated password.
+     * @return array — status message.
+     */
     public function validateUserSignup($name, $email, $pwd, $pwd_repeat) {
-        if (isset($_POST['signup-submit'])) {
-            if (empty($name) || empty($email) || empty($pwd) || empty($pwd_repeat)) {
+        if (empty($name) || empty($email) || empty($pwd) || empty($pwd_repeat)) {
+            $tmp['status'] = 'Failed';
+            $tmp['error'] = 'Empty fields';
+        } else {
+            if ($pwd != $pwd_repeat) {
                 $tmp['status'] = 'Failed';
-                $tmp['error'] = 'Empty fields';
+                $tmp['error'] = 'Passwords does not match';
             } else {
-                if ($pwd != $pwd_repeat) {
-                    $tmp['status'] = 'Failed';
-                    $tmp['error'] = 'Passwords does not match';
-                } else {
-                    $tmp['status'] = 'Success';
-                }
+                $tmp['status'] = 'Success';
             }
         }
         

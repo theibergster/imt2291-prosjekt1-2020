@@ -5,18 +5,14 @@
 class Video {
     private $db;
     private $valid_extensions = array('mp4','avi','3gp','mov','mpeg', 'webm');
-
-
     public function __construct($db) {
         $this->db = $db;
     }
 
     /**
      * Returns the videos of all users or a single user.
-     * @param data {array} assoc array with either single 
-     * or all users, and the limit of how many rows to show.
-     * @return {array} Returns an assoc array of either rows return from db
-     * or error msg.
+     * @param array data — assoc array with either single or all users, and the limit of how many rows to show.
+     * @return array — Returns an assoc array of either rows return from db or error msg.
      */
     public function getVideos($data) {
         if ($data['user'] == 'all') {
@@ -49,7 +45,6 @@ class Video {
     }
 
     public function getLikedVideos($data) {
-
         $sql = 'SELECT videos.*, users.name, users.email, users.id AS uid
                 FROM videos
                 RIGHT JOIN rating ON videos.id = rating.video_id
@@ -72,6 +67,8 @@ class Video {
 
     /**
      * Method for getting info on single video
+     * @param string video — video id.
+     * @return array — row returned from db, or an error message.
      */
     public function getVideoInfo($video) {
         $id = htmlspecialchars($video);
@@ -87,13 +84,15 @@ class Video {
         if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             return $row;
         } else {
-            // Something bad TODO:
+            return array('status' => 'Error');
         }
     }
 
     /**
-     * AddVideo
-     * @return tmp {array} status or error msg
+     * Method for uploaading a video to the server.
+     * The video gets uploaded to the server and the server location is stored in the database.
+     * Also calls addThumbnail method if successful.
+     * @return array status or error msg
      */
     public function uploadVideo() {
         $name = $_FILES['file-video']['name'];
@@ -154,6 +153,12 @@ class Video {
         }
     }
 
+    /**
+     * Function called when uploading a video.
+     * If a thumnail file is selected, it will be stored on the server together with the assicated video.
+     * @param string id — user id.
+     * @return string — status message.
+     */
     public function addThumbnail($id) {
         $ext_check = array('jpg', 'jpeg', 'png', 'gif'); // Array of accepted file types
         $name = $_FILES['file-thumbnail']['name'];
@@ -185,31 +190,13 @@ class Video {
                 }
             }
         }
-
-
-        // $image = imagecreatetruecolor(200, 300);
-        // imagefill($image);
-
-        // if (!empty($_POST['thumbnail'])) {
-            // Add thumbnail to db.
-        // } else {
-            // Make thumbnail from video and add to db.
-            
-        // }
-
-        // $sec = 5;
-        // $movie = $e;
-        // $thumbnail = 'thumbnail.png';
-
-        // $ffmpeg = FFMpeg\FFMpeg::create();
-        // $video = $ffmpeg->open($movie);
-        // $frame = $video->frame(FFMpeg\Coordinate\TimeCode::fromSeconds($sec));
-        // $frame->save($thumbnail);
-
-        // $tmp['thumbnail'] = $thumbnail;
-        // echo '<img src="'.$thumbnail.'">';
     }
 
+    /**
+     * Function for getting all comments related to a single video.
+     * @param string vid — video id.
+     * @return array — status message.
+     */
     public function getComments($vid) {
         $id = htmlspecialchars($vid);
 
@@ -229,6 +216,11 @@ class Video {
         }
     }
 
+    /**
+     * Function responsible for adding a comment to a video.
+     * @param string vid — video id.
+     * @return array — status message.
+     */
     public function addComment($vid) {
         if (!empty($_POST['comment'])) {
             $id = htmlspecialchars($vid);
@@ -256,6 +248,11 @@ class Video {
         return $tmp;
     }
 
+    /**
+     * Function responisble for deleting a comment related to a video.
+     * @param array commentData — user id, video id, and time of the comment.
+     * @return string — status message.
+     */
     public function deleteComment($commentData) {
         $uid = htmlspecialchars($commentData['uid']);
         $vid = htmlspecialchars($commentData['vid']);
@@ -274,6 +271,8 @@ class Video {
 
         if ($sth->rowCount() > 0) {
             return 'success';
+        } else {
+            return 'Failed';
         }
     }
 }

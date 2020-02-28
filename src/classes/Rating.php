@@ -10,8 +10,8 @@ class Rating {
     
     /**
      * Function that returns how many users that have rated a video, and the average rating of the video.
-     * @param {string} — video id.
-     * @return {array} — assoc array with rows from db, or status message if unsuccessful.
+     * @param string vid — video id.
+     * @return array tmp — assoc array with rows from db, or status message if unsuccessful.
      */
     public function getTotalRating($vid) {
         $video_id = htmlspecialchars($vid);
@@ -36,8 +36,8 @@ class Rating {
 
     /**
      * Function for getting the current user's rating of a single video.
-     * @param {string} — video id.
-     * @return {array} — assoc array with rows from db, or error message if no rows are returned.
+     * @param string vid — video id.
+     * @return array tmp — assoc array with rows from db, or error message if no rows are returned.
      */
     public function getUserRating($vid) {
         $video_id = htmlspecialchars($vid);
@@ -68,8 +68,8 @@ class Rating {
 
     /**
      * Function for setting the current user's rating value on a single video.
-     * @param {array} — video id, and rating value.
-     * @return {array} — assoc array with status.
+     * @param array data — video id, and rating value.
+     * @return array — assoc array with status.
      */
     public function rateVideo($data) {
         $video_id = htmlspecialchars($data['vid']);
@@ -103,8 +103,8 @@ class Rating {
      * Function for setting current user's like-value to 1(true) on video.
      * Uses getUserRating() method to check if there is already an existing row.
      * The result decides which query to use.
-     * @param {string} — video id.
-     * @return {array} — assoc array with status.
+     * @param string vid — video id.
+     * @return array — assoc array with status.
      */
     public function likeVideo($vid) {
         $video_id = htmlspecialchars($vid);
@@ -134,8 +134,8 @@ class Rating {
 
     /**
      * Function for checking if current user has liked a video.
-     * @param {string} — video id.
-     * @return {bool} — true or false.
+     * @param string vid — video id.
+     * @return bool — true or false.
      */
     public function checkLike($vid) {
         $video_id = htmlspecialchars($vid);
@@ -161,8 +161,8 @@ class Rating {
 
     /**
      * Function for setting current user's like-value to 0(false) on a video.
-     * @param {string} — video id.
-     * @return {array} — assoc array with status.
+     * @param string vid — video id.
+     * @return array — assoc array with status.
      */
     public function dislikeVideo($vid) {
         $video_id = htmlspecialchars($vid);
@@ -186,8 +186,8 @@ class Rating {
 
     /**
      * Function returning a videos total number of likes.
-     * @param {string} — video id.
-     * @return {array} — rows from db, or error message if no rows are returned.
+     * @param string vid — video id.
+     * @return array row — rows from db, or error message if no rows are returned.
      */
     public function getTotalLikes($vid) {
         $video_id = htmlspecialchars($vid);
