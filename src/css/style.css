@@ -83,9 +83,16 @@ textarea {
   color: white;
 }
 
-video {
-  max-width: 600px;
-  height: auto;
+#topBtn {
+  display: none;
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+}
+
+#topBtn:hover {
+  background: rgba(0, 0, 0, 0.7);
+  /*border: 1px solid #F8F3D9;*/
 }
 
 /*** Header ***/
@@ -222,6 +229,11 @@ main {
 }
 
 /*** Videos Info Page ***/
+
+video {
+  max-width: 600px;
+  height: auto;
+}
 
 .video-add-playlist {
   margin: .1rem 0;
