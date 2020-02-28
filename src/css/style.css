@@ -83,6 +83,13 @@ textarea {
   color: white;
 }
 
+.btn-danger {
+  background: #ff6562;
+}
+.btn-success {
+  background: #00c07f;
+}
+
 #topBtn {
   display: none;
   position: fixed;
@@ -393,4 +400,14 @@ video {
 .signup-form button {
   margin: 2rem auto;
   padding: .7rem 0;
+}
+
+/** Users page **/
+
+.user-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin: .5rem 0;
+  padding: .5rem;
+  border-bottom: 1px solid #999;
 }

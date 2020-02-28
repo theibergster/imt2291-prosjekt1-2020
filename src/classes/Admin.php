@@ -10,9 +10,22 @@ class Admin extends User {
     }
 
     /**
-     * Get list of users
+     * Get a complet list of users from database.
+     * @return array row — rows from db.
      */
-    public function getUsers() {}
+    public function getUsers() {
+        $sql = 'SELECT users.*
+                FROM users';
+        
+        $sth = $this->db->prepare($sql);
+        $sth->execute();
+
+        if ($row = $sth->fetchAll(PDO::FETCH_ASSOC)) {
+            return $row;
+        } else {
+            return array('error' => 'error');
+        }
+    }
 
     /**
      * Delete a user

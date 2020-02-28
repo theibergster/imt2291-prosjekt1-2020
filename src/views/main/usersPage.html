@@ -4,7 +4,19 @@
 
 <main>
    <h2>Users</h2>
-   <p>List of users, and validation requests goes here.. (unfinished)</p>
+   {% for user in users %}
+      <div class="user-card title-n-button">
+         <h4>{{ user.name }}</h4>
+         <small>{{user.type}}</small>
+         <small>{{user.email}}</small>
+         <form>
+            <button class="btn btn-danger">Delete</button>
+            {% if user.type == 'teacher' and user.verified == 0 %}
+               <button class="btn btn-success">Verify</button>
+            {% endif%}
+         </form>
+      </div>
+   {% endfor %}   
 </main>
 
 {% endblock %}

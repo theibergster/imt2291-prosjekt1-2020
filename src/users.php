@@ -12,7 +12,7 @@ $twig = new \Twig\Environment($loader, [
 ]);
 
 $db = DB::getDBConnection();
-$admin = new admin($db);
+$admin = new Admin($db);
 
 if ($admin->loggedIn()) {
     if ($_SESSION['type'] == 'admin') {
@@ -20,6 +20,7 @@ if ($admin->loggedIn()) {
         'title' => 'Profile Page',
         'loggedIn' => true,
         'userData' => $_SESSION,
+        'users' => $admin->getUsers(),
         ];
         
         echo $twig->render('main/usersPage.html', $data);

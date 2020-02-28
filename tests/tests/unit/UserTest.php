@@ -9,7 +9,7 @@ class UserTest extends \Codeception\Test\Unit {
     private $db;
     private $user;
     private $testUser;
-    private $testId = 2;
+    private $testId = 1;
     
     protected function _before() {
         $db = DB::getDBConnection();
